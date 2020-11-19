@@ -2,6 +2,40 @@
 const int chr_pin = 2;
 const int trig_pin = 3;
 
+const int adc_tail_pin = 1;
+const int gpio_tail_pin = 15;
+const int gpio_rise_a_pin = 14;
+const int gpio_rise_b_pin = 15; // the one with the transistor
+const int adc_rise_pin = 0;
+
+
+void init_pulser_pins() {
+  pinMode(gpio_tail_pin, INPUT);
+  pinMode(gpio_rise_a_pin, INPUT);
+  pinMode(gpio_rise_b_pin, OUTPUT);
+  
+}
+
+int meas_tail_pot(){
+
+  const float r_ser_gpio = 1000.0;
+  const float r_ser_pot = 10.0;
+
+  int adc_val = 0;
+  pinMode(gpio_tail_pin, OUTPUT);
+  digitalWrite(gpio_tail_pin,HIGH);
+
+  delay(20);
+  adc_val = analogRead(adc_tail_pin);
+
+  digitalWrite(gpio_tail_pin,LOW);
+  pinMode(gpio_tail_pin, INPUT);  
+  delay(20);
+
+  float adc_quot = float(adc_val)/1023.0 ;
+  return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
+  
+}
 
 
 void setup() {
@@ -11,6 +45,10 @@ void setup() {
   pinMode(trig_pin, OUTPUT);
   digitalWrite(trig_pin, 0);  
   randomSeed(analogRead(0));
+
+  init_pulser_pins();
+
+  Serial.begin(115200);
 
 }
 
@@ -65,6 +103,9 @@ void pulse(int charge_time_us, int discharge_time_us){
 }
 
 
+
+int loop_cnt = 0;
+
 void loop() {
   // put your main code here, to run repeatedly:
 
@@ -100,7 +141,12 @@ void loop() {
 //  }
 
 
+  loop_cnt = (loop_cnt+1)%200;
 
+  if(loop_cnt == 0){
+    Serial.print("meas_tail_pot(): ");
+    Serial.println(meas_tail_pot());
+  }
   
   
 }
