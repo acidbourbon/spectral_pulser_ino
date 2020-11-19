@@ -5,7 +5,7 @@ const int trig_pin = 3;
 const int adc_tail_pin = 1;
 const int gpio_tail_pin = 15;
 const int gpio_rise_a_pin = 14;
-const int gpio_rise_b_pin = 15; // the one with the transistor
+const int gpio_rise_b_pin = 16; // the one with the transistor
 const int adc_rise_pin = 0;
 
 
@@ -36,6 +36,31 @@ int meas_tail_pot(){
   return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
   
 }
+
+int meas_rise_pot(){
+
+  const float r_ser_gpio = 1000.0;
+  const float r_ser_pot = 0.0;
+
+  int adc_val = 0;
+  pinMode(gpio_rise_a_pin, OUTPUT);
+  digitalWrite(gpio_rise_a_pin,HIGH);
+  digitalWrite(gpio_rise_b_pin,HIGH);
+
+  delay(20);
+  adc_val = analogRead(adc_rise_pin);
+
+  digitalWrite(gpio_rise_a_pin,LOW);
+  digitalWrite(gpio_rise_b_pin,LOW);
+  pinMode(gpio_rise_a_pin, INPUT);  
+  delay(20);
+
+  float adc_quot = float(adc_val)/1023.0 ;
+  return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
+  //return adc_val;
+  
+}
+
 
 
 void setup() {
@@ -146,6 +171,9 @@ void loop() {
   if(loop_cnt == 0){
     Serial.print("meas_tail_pot(): ");
     Serial.println(meas_tail_pot());
+    Serial.print("meas_rise_pot(): ");
+    Serial.println(meas_rise_pot());
+    Serial.println();
   }
   
   
