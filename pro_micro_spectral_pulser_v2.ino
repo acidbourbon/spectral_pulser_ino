@@ -3,9 +3,9 @@ const int chr_pin = 2;
 const int trig_pin = 3;
 
 const int adc_tail_pin = 1;
-const int gpio_tail_pin = 15;
-const int gpio_rise_a_pin = 14;
-const int gpio_rise_b_pin = 16; // the one with the transistor
+const int gpio_tail_pin = 7;
+const int gpio_rise_a_pin = 8;
+const int gpio_rise_b_pin = 9; // the one with the transistor
 const int adc_rise_pin = 0;
 
 
