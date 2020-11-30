@@ -7,6 +7,7 @@ const int gpio_tail_pin = 7;
 const int gpio_rise_a_pin = 8;
 const int gpio_rise_b_pin = 9; // the one with the transistor
 const int adc_rise_pin = 0;
+const int adc_bat_pin = 2;
 
 
 void init_pulser_pins() {
@@ -14,6 +15,11 @@ void init_pulser_pins() {
   pinMode(gpio_rise_a_pin, INPUT);
   pinMode(gpio_rise_b_pin, OUTPUT);
   
+}
+
+float meas_bat(){
+  int adc_val = analogRead(adc_bat_pin);
+  return float(adc_val)*2./1023.*3.3/4.28*4.4;
 }
 
 int meas_tail_pot(){
@@ -173,6 +179,8 @@ void loop() {
     Serial.println(meas_tail_pot());
     Serial.print("meas_rise_pot(): ");
     Serial.println(meas_rise_pot());
+    Serial.print("meas_bat(): ");
+    Serial.println(meas_bat());
     Serial.println();
   }
   
