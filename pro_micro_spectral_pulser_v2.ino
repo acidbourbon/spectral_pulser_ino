@@ -163,6 +163,9 @@ void pulse(int charge_time_us, int discharge_time_us){
 
 int loop_cnt = 0;
 
+const int debug_pos_x = 20;
+const int debug_pos_y = 200;
+
 void loop() {
   // put your main code here, to run repeatedly:
 
@@ -209,6 +212,19 @@ void loop() {
     Serial.println(meas_bat());
     Serial.println();
   }
+
+  
+
+  tft.fillRect(debug_pos_x,
+               debug_pos_y,
+               60,
+               10,
+               ILI9341_BLACK);
+               
+  tft.setCursor(debug_pos_x,debug_pos_y);
+  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
+  tft.println(analogRead(3));           
+  delay(100);
   
   
 }
