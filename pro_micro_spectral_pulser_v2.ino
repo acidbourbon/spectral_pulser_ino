@@ -1,4 +1,14 @@
 
+
+#include "global.h"
+
+
+// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+// If using the breakout, change pins as desired
+//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
+
+
 const int chr_pin = 2;
 const int trig_pin = 3;
 
@@ -81,6 +91,22 @@ void setup() {
 
   Serial.begin(115200);
 
+
+
+  pinMode(TFT_RST,OUTPUT);
+  digitalWrite(TFT_RST,0);
+  delay(10);
+  digitalWrite(TFT_RST,1);
+  delay(500);
+ 
+  tft.begin();
+  tft.setRotation(3);
+
+
+  //testText();
+  //delay(1000);
+
+  demo_plot();
 }
 
 void pulse_mv(float mv){
