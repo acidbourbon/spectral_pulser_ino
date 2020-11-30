@@ -166,6 +166,19 @@ int loop_cnt = 0;
 const int debug_pos_x = 20;
 const int debug_pos_y = 200;
 
+int decode_adc_buttons(){
+
+
+  const int button_adc_pin = 3;
+  const int buttons = 4;
+  const int adc_range = 1023;
+
+  const int fraction = int( float(adc_range)/float(buttons) );
+  const int safety_margin = fraction/2;
+  return (analogRead(button_adc_pin) + safety_margin)/fraction -1;
+  
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
 
@@ -223,7 +236,7 @@ void loop() {
                
   tft.setCursor(debug_pos_x,debug_pos_y);
   tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
-  tft.println(analogRead(3));           
+  tft.println(decode_adc_buttons());           
   delay(100);
   
   
