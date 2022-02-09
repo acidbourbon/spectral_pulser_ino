@@ -169,7 +169,7 @@ int read_att_pot(void){
   return 1023 - analogRead(ADC_POT);
 }
 
-int set_attenuator(int val){
+void set_attenuator(int val){
   for (int i = 7; i >=0 ; i--){
     digitalWrite(ATT_CLK, 0);
     
@@ -183,6 +183,12 @@ int set_attenuator(int val){
     digitalWrite(ATT_CLK, 0);
     digitalWrite(ATT_SDI, 0);
 }
+
+void set_attenuator_dB(float dB){
+   int LSB = int(dB*2);
+   set_attenuator(63-LSB);
+}
+
 
 int decode_adc_buttons(){
 
@@ -296,14 +302,26 @@ const int debug_pos_y = 200;
 //  }
 
 
-  loop_cnt = (loop_cnt+1)%100;
+  loop_cnt = (loop_cnt+1)%300;
   
   
   if(loop_cnt == 0){
-        set_attenuator(31);
+        set_attenuator_dB(0);
   }
   if(loop_cnt == 50){
-        set_attenuator(63);
+        set_attenuator_dB(6);
+  }
+  if(loop_cnt == 100){
+        set_attenuator_dB(12);
+  }
+  if(loop_cnt == 150){
+        set_attenuator_dB(18);
+  }
+  if(loop_cnt == 200){
+        set_attenuator_dB(24);
+  }
+  if(loop_cnt == 250){
+        set_attenuator_dB(30);
   }
 
 //    if(loop_cnt == 0){
