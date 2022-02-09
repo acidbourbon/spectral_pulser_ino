@@ -163,8 +163,10 @@ void pulse(int charge_time_us, int discharge_time_us){
 
 int loop_cnt = 0;
 
-const int debug_pos_x = 20;
-const int debug_pos_y = 200;
+
+int read_att_pot(void){
+  return analogRead(ADC_POT);
+}
 
 int decode_adc_buttons(){
 
@@ -218,7 +220,29 @@ int decode_adc_buttons(){
   
 }
 
+
+void tft_debug_print(int debug_pos_x,
+                     int debug_pos_y,
+                     int size,
+                     String text) {
+    
+  tft.fillRect(debug_pos_x,
+               debug_pos_y,
+               80,
+               20,
+               ILI9341_BLACK);
+               
+  tft.setCursor(debug_pos_x,debug_pos_y);
+  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(size);
+  tft.print(text);
+    
+}
+
+
 void loop() {
+    
+const int debug_pos_x = 20;
+const int debug_pos_y = 200;
   // put your main code here, to run repeatedly:
 
   //delay(5);
@@ -255,30 +279,37 @@ void loop() {
 
   loop_cnt = (loop_cnt+1)%200;
 
-  if(loop_cnt == 0){
-    Serial.print("meas_tail_pot(): ");
-    Serial.println(meas_tail_pot());
-    Serial.print("meas_rise_pot(): ");
-    Serial.println(meas_rise_pot());
-    Serial.print("meas_bat(): ");
-    Serial.println(meas_bat());
-    Serial.println();
-  }
+//   if(loop_cnt == 0){
+//     Serial.print("meas_tail_pot(): ");
+//     Serial.println(meas_tail_pot());
+//     Serial.print("meas_rise_pot(): ");
+//     Serial.println(meas_rise_pot());
+//     Serial.print("meas_bat(): ");
+//     Serial.println(meas_bat());
+//     Serial.println();
+//   }
 
   
 
-  tft.fillRect(debug_pos_x,
-               debug_pos_y,
-               100,
-               100,
-               ILI9341_BLACK);
-               
-  tft.setCursor(debug_pos_x,debug_pos_y);
-  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(3);
+  //tft.fillRect(debug_pos_x,
+  //             debug_pos_y,
+  //             80,
+  //             20,
+  //             ILI9341_BLACK);
+  //             
+  //tft.setCursor(debug_pos_x,debug_pos_y);
+  //tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(3);
+  //int buttons = decode_adc_buttons();           
+  //for (int j = 3; j>=0; j--)
+  //  tft.print((buttons&(1<<j))>>j);          
+  String dummy ="";
   int buttons = decode_adc_buttons();           
   for (int j = 3; j>=0; j--)
-    tft.print((buttons&(1<<j))>>j);          
-  delay(100);
+    dummy += String((buttons&(1<<j))>>j);          
+  
+  
+  tft_debug_print( 20,200,2,dummy);
+  delay(50);
   
   
 }
