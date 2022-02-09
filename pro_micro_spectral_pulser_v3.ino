@@ -169,13 +169,52 @@ const int debug_pos_y = 200;
 int decode_adc_buttons(){
 
 
-  const int button_adc_pin = 3;
-  const int buttons = 4;
-  const int adc_range = 1023;
+  const int button_adc_pin = ADC_BUTTONS ;
+//   const int buttons = 4;
+//   const int adc_range = 1023;
 
-  const int fraction = int( float(adc_range)/float(buttons) );
-  const int safety_margin = fraction/2;
-  return (analogRead(button_adc_pin) + safety_margin)/fraction -1;
+//   const int fraction = int( float(adc_range)/float(buttons) );
+//   const int safety_margin = fraction/2;
+//   return (analogRead(button_adc_pin) + safety_margin)/fraction -1;
+  
+// ADC: 0000-0018, bit code: 0000
+// ADC: 0197-0235, bit code: 0001
+// ADC: 0257-0294, bit code: 0011
+// ADC: 0360-0398, bit code: 0101
+// ADC: 0413-0451, bit code: 0010
+// ADC: 0531-0569, bit code: 0110
+// ADC: 0587-0625, bit code: 1001
+// ADC: 0629-0667, bit code: 0100
+// ADC: 0740-0778, bit code: 1010
+// ADC: 0810-0848, bit code: 1100
+// ADC: 0850-0888, bit code: 1000
+  
+  int adcval = analogRead(button_adc_pin);
+  
+  if (adcval <= 18)
+    return 0b0000;
+  else if (adcval <= 253)
+    return 0b0001;
+  else if (adcval <= 294)
+    return 0b0011;
+  else if (adcval <= 398)
+    return 0b0101;
+  else if (adcval <= 451)
+    return 0b0010;
+  else if (adcval <= 569)
+    return 0b0110;
+  else if (adcval <= 625)
+    return 0b1001;
+  else if (adcval <= 667)
+    return 0b0100;
+  else if (adcval <= 778)
+    return 0b1010;
+  else if (adcval <= 848)
+    return 0b1100;
+  else if (adcval <= 888)
+    return 0b1000;
+  else
+    return -1;
   
 }
 
@@ -230,13 +269,15 @@ void loop() {
 
   tft.fillRect(debug_pos_x,
                debug_pos_y,
-               60,
-               10,
+               100,
+               100,
                ILI9341_BLACK);
                
   tft.setCursor(debug_pos_x,debug_pos_y);
-  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
-  tft.println(decode_adc_buttons());           
+  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(3);
+  int buttons = decode_adc_buttons();           
+  for (int j = 3; j>=0; j--)
+    tft.print((buttons&(1<<j))>>j);          
   delay(100);
   
   

@@ -35,11 +35,18 @@
 
 
 
-#define TFT_DC   4
-#define TFT_RST  5
-#define TFT_CS   6
+#define TFT_CS   12
+#define TFT_DC   8
+#define TFT_RST  11
 
 // Hardware SPI on the Lilipad/Leonardo clone:
 // MISO -> D14
 // SCK  -> D15
 // MOSI -> D16
+
+#define ADC_RISE 0
+#define ADC_TAIL 1
+#define DAC_ADC
+#define VBAT2 3
+#define ADC_BUTTONS 4
+#define ADC_POT 5
