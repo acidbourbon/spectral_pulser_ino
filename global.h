@@ -50,3 +50,14 @@
 #define VBAT2 3
 #define ADC_BUTTONS 4
 #define ADC_POT 5
+
+#define GPIO_RISE_A 2
+#define GPIO_RISE_B 3
+#define GPIO_TAIL 4
+#define ATT_CLK 5
+#define ATT_SDI 6
+#define ATT_LE 7
+#define DAC_CHARGE 9
+#define PULSE_TRIGGER 10
+#define F_CS 13
+#define SD_CS 1

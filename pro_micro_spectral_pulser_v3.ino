@@ -9,26 +9,18 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 //Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
 
 
-const int chr_pin = 2;
-const int trig_pin = 3;
 
-const int adc_tail_pin = 1;
-const int gpio_tail_pin = 7;
-const int gpio_rise_a_pin = 8;
-const int gpio_rise_b_pin = 9; // the one with the transistor
-const int adc_rise_pin = 0;
-const int adc_bat_pin = 2;
 
 
 void init_pulser_pins() {
-  pinMode(gpio_tail_pin, INPUT);
-  pinMode(gpio_rise_a_pin, INPUT);
-  pinMode(gpio_rise_b_pin, OUTPUT);
+  pinMode(GPIO_TAIL, INPUT);
+  pinMode(GPIO_RISE_A, INPUT);
+  pinMode(GPIO_RISE_B, OUTPUT);
   
 }
 
 float meas_bat(){
-  int adc_val = analogRead(adc_bat_pin);
+  int adc_val = analogRead(VBAT2);
   return float(adc_val)*2./1023.*3.3/4.28*4.4;
 }
 
@@ -38,14 +30,14 @@ int meas_tail_pot(){
   const float r_ser_pot = 10.0;
 
   int adc_val = 0;
-  pinMode(gpio_tail_pin, OUTPUT);
-  digitalWrite(gpio_tail_pin,HIGH);
+  pinMode(GPIO_TAIL, OUTPUT);
+  digitalWrite(GPIO_TAIL,HIGH);
 
   delay(20);
-  adc_val = analogRead(adc_tail_pin);
+  adc_val = analogRead(ADC_TAIL);
 
-  digitalWrite(gpio_tail_pin,LOW);
-  pinMode(gpio_tail_pin, INPUT);  
+  digitalWrite(GPIO_TAIL,LOW);
+  pinMode(GPIO_TAIL, INPUT);  
   delay(20);
 
   float adc_quot = float(adc_val)/1023.0 ;
@@ -59,16 +51,16 @@ int meas_rise_pot(){
   const float r_ser_pot = 0.0;
 
   int adc_val = 0;
-  pinMode(gpio_rise_a_pin, OUTPUT);
-  digitalWrite(gpio_rise_a_pin,HIGH);
-  digitalWrite(gpio_rise_b_pin,HIGH);
+  pinMode(GPIO_RISE_A, OUTPUT);
+  digitalWrite(GPIO_RISE_A,HIGH);
+  digitalWrite(GPIO_RISE_B,HIGH);
 
   delay(20);
-  adc_val = analogRead(adc_rise_pin);
+  adc_val = analogRead(ADC_RISE);
 
-  digitalWrite(gpio_rise_a_pin,LOW);
-  digitalWrite(gpio_rise_b_pin,LOW);
-  pinMode(gpio_rise_a_pin, INPUT);  
+  digitalWrite(GPIO_RISE_A,LOW);
+  digitalWrite(GPIO_RISE_B,LOW);
+  pinMode(GPIO_RISE_A, INPUT);  
   delay(20);
 
   float adc_quot = float(adc_val)/1023.0 ;
@@ -81,10 +73,19 @@ int meas_rise_pot(){
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(chr_pin, OUTPUT);
-  digitalWrite(chr_pin, 0);
-  pinMode(trig_pin, OUTPUT);
-  digitalWrite(trig_pin, 0);  
+  pinMode(DAC_CHARGE, OUTPUT);
+  digitalWrite(DAC_CHARGE, 0);
+  pinMode(PULSE_TRIGGER, OUTPUT);
+  digitalWrite(PULSE_TRIGGER, 0);  
+  
+  pinMode(ATT_CLK, OUTPUT);
+  digitalWrite(ATT_CLK, 0);
+  pinMode(ATT_LE, OUTPUT);
+  digitalWrite(ATT_LE, 0);
+  pinMode(ATT_SDI, OUTPUT);
+  digitalWrite(ATT_SDI, 0);
+  
+  
   randomSeed(analogRead(0));
 
   init_pulser_pins();
@@ -132,27 +133,27 @@ void pulse(int charge_time_us, int discharge_time_us){
   cli();
   
   // default position
-  digitalWrite(chr_pin,0);
-  digitalWrite(trig_pin,0);
+  digitalWrite(DAC_CHARGE,0);
+  digitalWrite(PULSE_TRIGGER,0);
   delayMicroseconds(100);
   
   // charge
-  digitalWrite(chr_pin,1);
+  digitalWrite(DAC_CHARGE,1);
   delayMicroseconds(charge_time_us);
 
   // discharge
-  digitalWrite(chr_pin,0);
+  digitalWrite(DAC_CHARGE,0);
   delayMicroseconds(discharge_time_us); 
 
   // trigger and  full discharge
-  digitalWrite(trig_pin,1);
-  digitalWrite(chr_pin,0);
+  digitalWrite(PULSE_TRIGGER,1);
+  digitalWrite(DAC_CHARGE,0);
 
   delayMicroseconds(500);
 
   // default position
-  digitalWrite(chr_pin,0);
-  digitalWrite(trig_pin,0);
+  digitalWrite(DAC_CHARGE,0);
+  digitalWrite(PULSE_TRIGGER,0);
 
   // enable interrupts again
   sei();
@@ -161,11 +162,26 @@ void pulse(int charge_time_us, int discharge_time_us){
 
 
 
-int loop_cnt = 0;
 
 
 int read_att_pot(void){
-  return analogRead(ADC_POT);
+  // i wired the poti the wrong way so inverting here
+  return 1023 - analogRead(ADC_POT);
+}
+
+int set_attenuator(int val){
+  for (int i = 7; i >=0 ; i--){
+    digitalWrite(ATT_CLK, 0);
+    
+    digitalWrite(ATT_SDI, (val&(1<<i))>>i );
+    digitalWrite(ATT_CLK, 1);
+  }
+    digitalWrite(ATT_CLK, 0);
+    digitalWrite(ATT_LE,  1);
+    digitalWrite(ATT_CLK, 1);
+    digitalWrite(ATT_LE,  0);
+    digitalWrite(ATT_CLK, 0);
+    digitalWrite(ATT_SDI, 0);
 }
 
 int decode_adc_buttons(){
@@ -226,11 +242,11 @@ void tft_debug_print(int debug_pos_x,
                      int size,
                      String text) {
     
-  tft.fillRect(debug_pos_x,
-               debug_pos_y,
-               80,
-               20,
-               ILI9341_BLACK);
+//   tft.fillRect(debug_pos_x,
+//                debug_pos_y,
+//                80,
+//                20,
+//                ILI9341_BLACK);
                
   tft.setCursor(debug_pos_x,debug_pos_y);
   tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(size);
@@ -238,6 +254,8 @@ void tft_debug_print(int debug_pos_x,
     
 }
 
+
+int loop_cnt = 0;
 
 void loop() {
     
@@ -247,12 +265,13 @@ const int debug_pos_y = 200;
 
   //delay(5);
 
-  int lines = 4;
-  int i = random(0,lines);
-  //pulse_mv(150);
+  
+  pulse_mv(400.*(float(read_att_pot())/1023.));
 
   
-  pulse_mv(4*10*pow(2,i) ); // 10 because 20 db attenuator
+//   int lines = 4;
+//   int i = random(0,lines);
+//   pulse_mv(4*10*pow(2,i) ); // 10 because 20 db attenuator
   
 //
 //  switch(i){
@@ -277,39 +296,52 @@ const int debug_pos_y = 200;
 //  }
 
 
-  loop_cnt = (loop_cnt+1)%200;
-
-//   if(loop_cnt == 0){
-//     Serial.print("meas_tail_pot(): ");
-//     Serial.println(meas_tail_pot());
-//     Serial.print("meas_rise_pot(): ");
-//     Serial.println(meas_rise_pot());
-//     Serial.print("meas_bat(): ");
-//     Serial.println(meas_bat());
-//     Serial.println();
-//   }
-
-  
-
-  //tft.fillRect(debug_pos_x,
-  //             debug_pos_y,
-  //             80,
-  //             20,
-  //             ILI9341_BLACK);
-  //             
-  //tft.setCursor(debug_pos_x,debug_pos_y);
-  //tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(3);
-  //int buttons = decode_adc_buttons();           
-  //for (int j = 3; j>=0; j--)
-  //  tft.print((buttons&(1<<j))>>j);          
-  String dummy ="";
-  int buttons = decode_adc_buttons();           
-  for (int j = 3; j>=0; j--)
-    dummy += String((buttons&(1<<j))>>j);          
+  loop_cnt = (loop_cnt+1)%100;
   
   
-  tft_debug_print( 20,200,2,dummy);
-  delay(50);
+  if(loop_cnt == 0){
+        set_attenuator(31);
+  }
+  if(loop_cnt == 50){
+        set_attenuator(63);
+  }
+
+//    if(loop_cnt == 0){
+//      Serial.print("meas_tail_pot(): ");
+//      Serial.println(meas_tail_pot());
+//      Serial.print("meas_rise_pot(): ");
+//      Serial.println(meas_rise_pot());
+//      Serial.print("meas_bat(): ");
+//      Serial.println(meas_bat());
+//      Serial.println();
+//    }
+
+  if(loop_cnt == 0 and 0){
+      
+    delay(100);
+    tft.fillRect(20,
+               180,
+               100,
+               20,
+               ILI9341_BLACK);
+    tft_debug_print( 20,180,1,    "ADC_RISE: "+String(meas_rise_pot()) );
+    tft_debug_print( 20,190,1,    "ADC_TAIL: "+String(meas_tail_pot()) );
+    delay(300);
+  } 
+  
+  if(0){ 
+    String dummy ="";
+    int buttons = decode_adc_buttons();           
+    for (int j = 3; j>=0; j--)
+        dummy += String((buttons&(1<<j))>>j);          
+    
+    
+    tft_debug_print( 20,200,2,dummy);
+    
+    tft_debug_print( 200,200,2,String(read_att_pot()));
+    
+  }
+  
   
   
 }
