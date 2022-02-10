@@ -126,16 +126,18 @@ const int debug_pos_y = 200;
 //      Serial.println();
 //    }
 
-  if(loop_cnt == 0 and 0){
+  if(loop_cnt == 0 ){
       
     delay(100);
-    tft.fillRect(20,
-               180,
-               100,
-               20,
-               ILI9341_BLACK);
+    tft.fillScreen(ILI9341_GREEN);
+//     tft.fillRect(20,
+//                180,
+//                100,
+//                20,
+//                ILI9341_BLACK);
     tft_debug_print( 20,180,1,    "ADC_RISE: "+String(meas_rise_pot()) );
     tft_debug_print( 20,190,1,    "ADC_TAIL: "+String(meas_tail_pot()) );
+    tft_debug_print( 20,200,1,    "ADC_TAIL: "+String(meas_bat()) );
     delay(300);
   } 
   

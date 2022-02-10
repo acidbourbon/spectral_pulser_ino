@@ -186,11 +186,11 @@ void tft_debug_print(int debug_pos_x,
                      int size,
                      String text) {
     
-//   tft.fillRect(debug_pos_x,
-//                debug_pos_y,
-//                80,
-//                20,
-//                ILI9341_BLACK);
+  tft.fillRect(debug_pos_x,
+               debug_pos_y,
+               text.length()*6*size,
+               8*size,
+               ILI9341_BLACK);
                
   tft.setCursor(debug_pos_x,debug_pos_y);
   tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(size);
