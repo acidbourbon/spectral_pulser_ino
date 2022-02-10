@@ -171,3 +171,21 @@ unsigned long testText() {
 //   tft.println("see if I don't!");
   return micros() - start;
 }
+
+
+void tft_debug_print(int debug_pos_x,
+                     int debug_pos_y,
+                     int size,
+                     String text) {
+    
+//   tft.fillRect(debug_pos_x,
+//                debug_pos_y,
+//                80,
+//                20,
+//                ILI9341_BLACK);
+               
+  tft.setCursor(debug_pos_x,debug_pos_y);
+  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(size);
+  tft.print(text);
+    
+}
