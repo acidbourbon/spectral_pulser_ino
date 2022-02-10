@@ -161,7 +161,21 @@ void pulse(int charge_time_us, int discharge_time_us){
   
 }
 
-
+void pulse_mv_combo(float mv){
+  float max_amp_mv = 400.;
+  
+  float total_att = (mv+1e-9)/max_amp_mv;
+  float total_att_dB = -20* log10(total_att);
+  int half_dB_steps = int(total_att_dB*2);
+  if (half_dB_steps > 63){
+      half_dB_steps = 63;
+  }
+  //half_dB_steps = 12;
+  set_attenuator(63-half_dB_steps);
+  float rest_att_linear = pow(10, -float(half_dB_steps)/40. );
+  //pulse_mv(rest_att_linear * max_amp_mv);
+  pulse_mv(max_amp_mv);
+}
 
 
 
@@ -274,8 +288,9 @@ const int debug_pos_y = 200;
 
   
   //pulse_mv(400.*(float(read_att_pot())/1023.));
-  set_attenuator_dB( 31.*(float(read_att_pot())/1023.)   );
-  pulse_mv(400);
+//   set_attenuator_dB( 31.*(float(read_att_pot())/1023.)   );
+//   pulse_mv(400);
+  pulse_mv_combo(400.*(float(read_att_pot())/1023.));
 
   
 //   int lines = 4;
