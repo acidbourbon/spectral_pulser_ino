@@ -108,6 +108,7 @@ void setup() {
   //delay(1000);
 
   demo_plot();
+  set_attenuator_dB(0);
 }
 
 void pulse_mv(float mv){
@@ -272,7 +273,9 @@ const int debug_pos_y = 200;
   //delay(5);
 
   
-  pulse_mv(400.*(float(read_att_pot())/1023.));
+  //pulse_mv(400.*(float(read_att_pot())/1023.));
+  set_attenuator_dB( 31.*(float(read_att_pot())/1023.)   );
+  pulse_mv(400);
 
   
 //   int lines = 4;
@@ -305,24 +308,24 @@ const int debug_pos_y = 200;
   loop_cnt = (loop_cnt+1)%300;
   
   
-  if(loop_cnt == 0){
-        set_attenuator_dB(0);
-  }
-  if(loop_cnt == 50){
-        set_attenuator_dB(6);
-  }
-  if(loop_cnt == 100){
-        set_attenuator_dB(12);
-  }
-  if(loop_cnt == 150){
-        set_attenuator_dB(18);
-  }
-  if(loop_cnt == 200){
-        set_attenuator_dB(24);
-  }
-  if(loop_cnt == 250){
-        set_attenuator_dB(30);
-  }
+//   if(loop_cnt == 0){
+//         set_attenuator_dB(0);
+//   }
+//   if(loop_cnt == 50){
+//         set_attenuator_dB(6);
+//   }
+//   if(loop_cnt == 100){
+//         set_attenuator_dB(12);
+//   }
+//   if(loop_cnt == 150){
+//         set_attenuator_dB(18);
+//   }
+//   if(loop_cnt == 200){
+//         set_attenuator_dB(24);
+//   }
+//   if(loop_cnt == 250){
+//         set_attenuator_dB(30);
+//   }
 
 //    if(loop_cnt == 0){
 //      Serial.print("meas_tail_pot(): ");
