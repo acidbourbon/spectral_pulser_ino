@@ -13,7 +13,7 @@ void init_adc_aux_pins(){
 
 float meas_bat(){
   int adc_val = analogRead(VBAT2);
-  return float(adc_val)*2./1023.*3.3/4.28*4.4;
+  return float(adc_val)*2./1023.*3.3;
 }
 
 int meas_tail_pot(){
