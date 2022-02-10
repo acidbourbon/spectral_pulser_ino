@@ -157,17 +157,17 @@ unsigned long testText() {
   tft.println(0xDEADBEEF, HEX);
   tft.println();
   tft.setTextColor(ILI9341_GREEN);
-  tft.setTextSize(5);
-  tft.println("Bianca");
   tft.setTextSize(2);
-  tft.println("I implore thee,");
-  tft.setTextSize(1);
-  tft.println("my foonting turlingdromes.");
-  tft.println("And hooptiously drangle me");
-  tft.println("with crinkly bindlewurdles,");
-  tft.println("Or I will rend thee");
-  tft.println("in the gobberwarts");
-  tft.println("with my blurglecruncheon,");
-  tft.println("see if I don't!");
+  tft.println("SpectralPulser1");
+//   tft.setTextSize(2);
+//   tft.println("I implore thee,");
+//   tft.setTextSize(1);
+//   tft.println("my foonting turlingdromes.");
+//   tft.println("And hooptiously drangle me");
+//   tft.println("with crinkly bindlewurdles,");
+//   tft.println("Or I will rend thee");
+//   tft.println("in the gobberwarts");
+//   tft.println("with my blurglecruncheon,");
+//   tft.println("see if I don't!");
   return micros() - start;
 }

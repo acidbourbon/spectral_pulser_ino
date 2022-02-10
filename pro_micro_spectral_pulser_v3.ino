@@ -104,10 +104,10 @@ void setup() {
   tft.setRotation(3);
 
 
-  //testText();
+  testText();
   //delay(1000);
 
-  demo_plot();
+  //demo_plot();
   set_attenuator_dB(0);
 }
 
@@ -170,11 +170,10 @@ void pulse_mv_combo(float mv){
   if (half_dB_steps > 63){
       half_dB_steps = 63;
   }
-  //half_dB_steps = 12;
   set_attenuator(63-half_dB_steps);
-  float rest_att_linear = pow(10, -float(half_dB_steps)/40. );
-  //pulse_mv(rest_att_linear * max_amp_mv);
-  pulse_mv(max_amp_mv);
+  
+  float rest_att_linear = total_att/pow(10, -float(half_dB_steps)/40. );
+  pulse_mv(rest_att_linear * max_amp_mv);
 }
 
 
@@ -290,12 +289,12 @@ const int debug_pos_y = 200;
   //pulse_mv(400.*(float(read_att_pot())/1023.));
 //   set_attenuator_dB( 31.*(float(read_att_pot())/1023.)   );
 //   pulse_mv(400);
-  pulse_mv_combo(400.*(float(read_att_pot())/1023.));
+//  pulse_mv_combo(400.*(float(read_att_pot())/1023.));
 
   
-//   int lines = 4;
-//   int i = random(0,lines);
-//   pulse_mv(4*10*pow(2,i) ); // 10 because 20 db attenuator
+   int lines = 4;
+   int i = random(0,lines);
+   pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
   
 //
 //  switch(i){
