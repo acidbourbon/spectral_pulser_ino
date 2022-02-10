@@ -1,4 +1,15 @@
 
+
+void init_pulser_pins(){
+    
+  pinMode(DAC_CHARGE, OUTPUT);
+  digitalWrite(DAC_CHARGE, 0);
+  pinMode(PULSE_TRIGGER, OUTPUT);
+  digitalWrite(PULSE_TRIGGER, 0);  
+    
+}
+
+
 void pulse_mv(float mv){
 
   //const float scale_voltage = 1.5;

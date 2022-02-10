@@ -4,7 +4,6 @@
 
 
 
-
 const int DISPLAY_WIDTH = 320;
 const int DISPLAY_HEIGHT = 240;
 
@@ -31,6 +30,15 @@ const float YSCALE = 1.0/YTICS_PX * YTICS;
 const float PULSE_DELAY = 10;
 
 
+
+void init_tft_pins(){
+  // Pins for TFT
+  pinMode(TFT_RST,OUTPUT);
+  digitalWrite(TFT_RST,0);
+  delay(10);
+  digitalWrite(TFT_RST,1);
+  delay(50);
+}
 
 
 void demo_plot(void) {

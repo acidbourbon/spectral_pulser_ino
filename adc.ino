@@ -1,4 +1,16 @@
 
+
+
+void init_adc_aux_pins(){
+    
+  // Pins for reading out potis
+  pinMode(GPIO_TAIL, INPUT);
+  pinMode(GPIO_RISE_A, INPUT);
+  pinMode(GPIO_RISE_B, OUTPUT);
+    
+}
+
+
 float meas_bat(){
   int adc_val = analogRead(VBAT2);
   return float(adc_val)*2./1023.*3.3/4.28*4.4;

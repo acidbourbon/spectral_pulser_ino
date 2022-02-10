@@ -1,6 +1,17 @@
 
 
 
+void init_attenuator_pins(){
+    
+  pinMode(ATT_CLK, OUTPUT);
+  digitalWrite(ATT_CLK, 0);
+  pinMode(ATT_LE, OUTPUT);
+  digitalWrite(ATT_LE, 0);
+  pinMode(ATT_SDI, OUTPUT);
+  digitalWrite(ATT_SDI, 0);
+    
+}
+
 
 void set_attenuator(int val){
   for (int i = 7; i >=0 ; i--){

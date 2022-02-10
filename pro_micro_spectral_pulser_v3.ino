@@ -18,21 +18,12 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(DAC_CHARGE, OUTPUT);
-  digitalWrite(DAC_CHARGE, 0);
-  pinMode(PULSE_TRIGGER, OUTPUT);
-  digitalWrite(PULSE_TRIGGER, 0);  
-  
-  pinMode(ATT_CLK, OUTPUT);
-  digitalWrite(ATT_CLK, 0);
-  pinMode(ATT_LE, OUTPUT);
-  digitalWrite(ATT_LE, 0);
-  pinMode(ATT_SDI, OUTPUT);
-  digitalWrite(ATT_SDI, 0);
-  
-  pinMode(GPIO_TAIL, INPUT);
-  pinMode(GPIO_RISE_A, INPUT);
-  pinMode(GPIO_RISE_B, OUTPUT);
+    
+    
+  init_attenuator_pins();
+  init_pulser_pins();
+  init_tft_pins();
+  init_adc_aux_pins();
   
   
   randomSeed(analogRead(0));
@@ -42,11 +33,6 @@ void setup() {
 
 
 
-  pinMode(TFT_RST,OUTPUT);
-  digitalWrite(TFT_RST,0);
-  delay(10);
-  digitalWrite(TFT_RST,1);
-  delay(500);
  
   tft.begin();
   tft.setRotation(3);
