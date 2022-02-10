@@ -62,6 +62,8 @@
 #define F_CS 13
 #define SD_CS 1
 
-#define C_RISE 10e-12
+// #define C_RISE 10e-12
+#define C_RISE 14e-12
 #define C_TAIL 100e-12
-#define R_SER_POT 10
+#define R_SER_TAIL 10.
+#define R_SER_RISE 33.

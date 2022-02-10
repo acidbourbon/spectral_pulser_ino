@@ -65,14 +65,16 @@ const int debug_pos_y = 200;
   //pulse_mv(400.*(float(read_att_pot())/1023.));
 //   set_attenuator_dB( 31.*(float(read_att_pot())/1023.)   );
 //   pulse_mv(400);
-  pulse_mv_combo(400.*(float(read_att_pot())/1023.));
+  //pulse_mv_combo(400.*(float(read_att_pot())/1023.));
 
-  
-   //int lines = 4;
-   //int i = random(0,lines);
-   //pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
-  
-//
+  if(0){
+    int lines = 4;
+    int i = random(0,lines);
+    pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
+  }else {
+    pulse_mv_combo(400.*(float(read_att_pot())/1023.));
+  }
+  //
 //  switch(i){
 //    case 0:
 //      pulse_mv(300);
@@ -127,15 +129,16 @@ const int debug_pos_y = 200;
 //      Serial.println();
 //    }
 
-  if(loop_cnt == 0 ){
+  if(loop_cnt == 0  ){
       
     delay(100);
     
-    float tau_rise_ns = meas_rise_pot()*C_RISE*1e9;
-    float tau_tail_ns = (meas_tail_pot() + R_SER_POT)*C_TAIL*1e9;
+    float tau_rise_ns = (meas_rise_pot() + R_SER_RISE)*C_RISE*1e9;
+    float tau_tail_ns = (meas_tail_pot() + R_SER_TAIL)*C_TAIL*1e9;
 
-    tft_debug_print( 20,180,1,    "RisePot (R): "+String(meas_rise_pot()) +"  " );
-    tft_debug_print( 20,190,1,    "TailPot (R): "+String(meas_tail_pot()) +"  " );
+    //tft_debug_print( 20,180,1,    "RisePot (R): "+String(meas_rise_pot()) +"  " );
+    //tft_debug_print( 20,190,1,    "TailPot (R): "+String(meas_tail_pot()) +"  " );
+    tft_debug_print( 20,190,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
     tft_debug_print( 20,200,1,    "Battery (V): "+String(meas_bat(),2 ));
     tft_debug_print( 20,210,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
     tft_debug_print( 20,220,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );

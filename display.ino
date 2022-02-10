@@ -44,8 +44,15 @@ void init_tft_pins(){
 void pulse_preview(float tau_rise, float tau_fall){
     //float tau_rise = 0.03;
     //float tau_fall = 20;
+    
+    
     float q = abs(tau_rise-tau_fall)*100;// if tau rise super small, then abs ampl is 70
     //float tdelay = 20;
+    
+    float max_amp = max_amplitude(q,tau_rise,tau_fall);
+    
+    // scale to 100 %
+    q = q*100./max_amp;
     
     clear_plot_area();
     plot_grid(XTICS_PX,YTICS_PX);
@@ -78,6 +85,15 @@ void demo_plot(void) {
     //delay(2000);
 
 }
+
+float peaking_time(float tau1, float tau2){
+  return log(tau1/tau2) / (1./tau2 - 1./tau1);
+}
+
+float max_amplitude(float q, float tau1, float tau2){
+  return q/tau1 * pow(tau1/tau2,-tau2/(tau1-tau2));
+}
+
 
 float pulse_func(const float x, const float q, const float tau_rise, const float tau_fall, const float tdelay){
   float x_ = x-tdelay;
