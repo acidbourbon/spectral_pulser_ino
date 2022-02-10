@@ -38,7 +38,8 @@ void setup() {
   tft.setRotation(3);
 
 
-  testText();
+  tft.fillScreen(ILI9341_BLACK);
+  //testText();
   //delay(1000);
 
   //demo_plot();
@@ -64,12 +65,12 @@ const int debug_pos_y = 200;
   //pulse_mv(400.*(float(read_att_pot())/1023.));
 //   set_attenuator_dB( 31.*(float(read_att_pot())/1023.)   );
 //   pulse_mv(400);
-//  pulse_mv_combo(400.*(float(read_att_pot())/1023.));
+  pulse_mv_combo(400.*(float(read_att_pot())/1023.));
 
   
-   int lines = 4;
-   int i = random(0,lines);
-   pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
+   //int lines = 4;
+   //int i = random(0,lines);
+   //pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
   
 //
 //  switch(i){
@@ -129,15 +130,18 @@ const int debug_pos_y = 200;
   if(loop_cnt == 0 ){
       
     delay(100);
-    //tft.fillScreen(ILI9341_GREEN);
-//     tft.fillRect(20,
-//                180,
-//                100,
-//                20,
-//                ILI9341_BLACK);
-    tft_debug_print( 20,180,1,    "ADC_RISE: "+String(meas_rise_pot()) );
-    tft_debug_print( 20,190,1,    "ADC_TAIL: "+String(meas_tail_pot()) );
-    tft_debug_print( 20,200,1,    "BAT (V) : "+String(meas_bat()) );
+    
+    float tau_rise_ns = meas_rise_pot()*C_RISE*1e9;
+    float tau_tail_ns = (meas_tail_pot() + R_SER_POT)*C_TAIL*1e9;
+
+    tft_debug_print( 20,180,1,    "RisePot (R): "+String(meas_rise_pot()) +"  " );
+    tft_debug_print( 20,190,1,    "TailPot (R): "+String(meas_tail_pot()) +"  " );
+    tft_debug_print( 20,200,1,    "Battery (V): "+String(meas_bat(),2 ));
+    tft_debug_print( 20,210,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
+    tft_debug_print( 20,220,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
+    
+    pulse_preview(tau_rise_ns,tau_tail_ns);
+    
     delay(300);
   } 
   

@@ -41,6 +41,21 @@ void init_tft_pins(){
 }
 
 
+void pulse_preview(float tau_rise, float tau_fall){
+    //float tau_rise = 0.03;
+    //float tau_fall = 20;
+    float q = abs(tau_rise-tau_fall)*100;// if tau rise super small, then abs ampl is 70
+    //float tdelay = 20;
+    
+    clear_plot_area();
+    plot_grid(XTICS_PX,YTICS_PX);
+    plot_axis_numbers(XTICS_PX,YTICS_PX);
+    
+    plot_pulse(q, tau_rise, tau_fall, PULSE_DELAY,ILI9341_RED);
+}
+    
+
+
 void demo_plot(void) {
 
     tft.fillScreen(ILI9341_BLACK);
