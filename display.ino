@@ -44,15 +44,16 @@ void init_tft_pins(){
 void pulse_preview(float tau_rise, float tau_fall){
     //float tau_rise = 0.03;
     //float tau_fall = 20;
-    
+    const int normalize = 0;
     
     float q = abs(tau_rise-tau_fall)*100;// if tau rise super small, then abs ampl is 70
     //float tdelay = 20;
     
-    float max_amp = max_amplitude(q,tau_rise,tau_fall);
-    
-    // scale to 100 %
-    q = q*100./max_amp;
+    if(normalize){
+      float max_amp = max_amplitude(q,tau_rise,tau_fall);
+      // scale to 100 %
+      q = q*100./max_amp;
+    }
     
     clear_plot_area();
     plot_grid(XTICS_PX,YTICS_PX);

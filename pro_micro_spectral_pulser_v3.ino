@@ -49,17 +49,14 @@ void setup() {
 
 
 
+float tau_rise_ns = 1; 
+float tau_tail_ns = 10;
 
 
 int loop_cnt = 0;
 
 void loop() {
     
-const int debug_pos_x = 20;
-const int debug_pos_y = 200;
-  // put your main code here, to run repeatedly:
-
-  //delay(5);
 
   
   //pulse_mv(400.*(float(read_att_pot())/1023.));
@@ -72,6 +69,16 @@ const int debug_pos_y = 200;
     int i = random(0,lines);
     pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
   }else {
+      
+//     float target_amplitude_mv = 200;
+//     float q = abs(tau_rise_ns-tau_tail_ns)*target_amplitude_mv;
+//     float max_amp = max_amplitude(q,tau_rise_ns,tau_tail_ns);
+//     float factor = target_amplitude_mv/max_amp;
+//     
+//     
+//     pulse_mv_combo(target_amplitude_mv*factor);
+    
+      
     pulse_mv_combo(400.*(float(read_att_pot())/1023.));
   }
   //
@@ -133,8 +140,8 @@ const int debug_pos_y = 200;
       
     delay(100);
     
-    float tau_rise_ns = (meas_rise_pot() + R_SER_RISE)*C_RISE*1e9;
-    float tau_tail_ns = (meas_tail_pot() + R_SER_TAIL)*C_TAIL*1e9;
+    tau_rise_ns = (meas_rise_pot() + R_SER_RISE)*C_RISE*1e9;
+    tau_tail_ns = (meas_tail_pot() + R_SER_TAIL)*C_TAIL*1e9;
 
     //tft_debug_print( 20,180,1,    "RisePot (R): "+String(meas_rise_pot()) +"  " );
     //tft_debug_print( 20,190,1,    "TailPot (R): "+String(meas_tail_pot()) +"  " );
