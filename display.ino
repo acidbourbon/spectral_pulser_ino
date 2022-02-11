@@ -41,7 +41,7 @@ void init_tft_pins(){
 }
 
 
-void pulse_preview(float tau_rise, float tau_fall){
+void pulse_preview(float tau_rise, float tau_fall,int clear){
     //float tau_rise = 0.03;
     //float tau_fall = 20;
     const int normalize = 0;
@@ -55,9 +55,11 @@ void pulse_preview(float tau_rise, float tau_fall){
       q = q*100./max_amp;
     }
     
-    clear_plot_area();
-    plot_grid(XTICS_PX,YTICS_PX);
-    plot_axis_numbers(XTICS_PX,YTICS_PX);
+    if (clear){
+      clear_plot_area();
+      plot_grid(XTICS_PX,YTICS_PX);
+      plot_axis_numbers(XTICS_PX,YTICS_PX);
+    }
     
     plot_pulse(q, tau_rise, tau_fall, PULSE_DELAY,ILI9341_RED);
 }
