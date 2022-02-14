@@ -16,11 +16,52 @@ float meas_bat(){
   return float(adc_val)*2./1023.*3.3;
 }
 
-int meas_tail_pot(){
+// int meas_tail_pot(){
+// 
+//   const float r_ser_gpio = 1000.0;
+//   const float r_ser_pot = 10.0;
+// 
+//   int adc_val = 0;
+//   pinMode(GPIO_TAIL, OUTPUT);
+//   digitalWrite(GPIO_TAIL,HIGH);
+// 
+//   delay(20);
+//   adc_val = analogRead(ADC_TAIL);
+// 
+//   digitalWrite(GPIO_TAIL,LOW);
+//   pinMode(GPIO_TAIL, INPUT);  
+//   delay(20);
+// 
+//   float adc_quot = float(adc_val)/1023.0 ;
+//   return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
+//   
+// }
+// 
+// int meas_rise_pot(){
+// 
+//   const float r_ser_gpio = 1000.0;
+//   const float r_ser_pot = 0.0;
+// 
+//   int adc_val = 0;
+//   pinMode(GPIO_RISE_A, OUTPUT);
+//   digitalWrite(GPIO_RISE_A,HIGH);
+//   digitalWrite(GPIO_RISE_B,HIGH);
+// 
+//   delay(20);
+//   adc_val = analogRead(ADC_RISE);
+// 
+//   digitalWrite(GPIO_RISE_A,LOW);
+//   digitalWrite(GPIO_RISE_B,LOW);
+//   pinMode(GPIO_RISE_A, INPUT);  
+//   delay(20);
+// 
+//   float adc_quot = float(adc_val)/1023.0 ;
+//   return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
+//   //return adc_val;
+//   
+// }
 
-  const float r_ser_gpio = 1000.0;
-  const float r_ser_pot = 10.0;
-
+int meas_tail_adc(){
   int adc_val = 0;
   pinMode(GPIO_TAIL, OUTPUT);
   digitalWrite(GPIO_TAIL,HIGH);
@@ -31,17 +72,22 @@ int meas_tail_pot(){
   digitalWrite(GPIO_TAIL,LOW);
   pinMode(GPIO_TAIL, INPUT);  
   delay(20);
+  return adc_val;
+}
+
+int calc_tail_pot(int adc_val){
+
+  const float r_ser_gpio = 1000.0;
+  const float r_ser_pot = 10.0;
+
 
   float adc_quot = float(adc_val)/1023.0 ;
   return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
   
 }
 
-int meas_rise_pot(){
-
-  const float r_ser_gpio = 1000.0;
-  const float r_ser_pot = 0.0;
-
+int meas_rise_adc(){
+    
   int adc_val = 0;
   pinMode(GPIO_RISE_A, OUTPUT);
   digitalWrite(GPIO_RISE_A,HIGH);
@@ -54,10 +100,17 @@ int meas_rise_pot(){
   digitalWrite(GPIO_RISE_B,LOW);
   pinMode(GPIO_RISE_A, INPUT);  
   delay(20);
+  return adc_val;
+}
+
+int calc_rise_pot(int adc_val){
+
+  const float r_ser_gpio = 1000.0;
+  const float r_ser_pot = 0.0;
+
 
   float adc_quot = float(adc_val)/1023.0 ;
   return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
-  //return adc_val;
   
 }
 

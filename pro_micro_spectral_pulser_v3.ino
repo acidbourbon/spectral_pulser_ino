@@ -53,8 +53,12 @@ float tau_rise_ns = 1;
 float tau_tail_ns = 10;
 
 
+int rise_pot = 2000;
+int tail_pot = 2000;
 int last_rise_pot = 2000;
 int last_tail_pot = 2000;
+int last_rise_adc = 2000;
+int last_tail_adc = 2000;
 //int is_updated    = 0;
 
 const int update_count_down_reset_val  = 20;
@@ -69,8 +73,8 @@ const int scan_interval_slow = 500;
 int scan_interval = scan_interval_fast;
 
 void display_status(int clear){
-    tft_debug_print( 180,180,1,    "RisePot (R): "+String(meas_rise_pot()) +"  " );
-    tft_debug_print( 180,190,1,    "TailPot (R): "+String(meas_tail_pot()) +"  " );
+    tft_debug_print( 180,180,1,    "RisePot (R): "+String(rise_pot) +"  " );
+    tft_debug_print( 180,190,1,    "TailPot (R): "+String(tail_pot) +"  " );
     tft_debug_print( 20,190,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
     tft_debug_print( 20,200,1,    "Battery (V): "+String(meas_bat(),2 ));
     tft_debug_print( 20,210,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
@@ -166,17 +170,23 @@ void loop() {
     
     if(loop_cnt == 0  ){
         
-        int rise_pot = meas_rise_pot();
-        int tail_pot = meas_tail_pot();
+        
+        int rise_adc = meas_rise_adc();
+        int tail_adc = meas_tail_adc();
+        
+        rise_pot = calc_rise_pot(rise_adc);
+        tail_pot = calc_tail_pot(tail_adc);
         
         
-        if( (abs(rise_pot - last_rise_pot) > 2) or (abs(tail_pot - last_tail_pot) > 2) ){
+        if( (abs(rise_adc - last_rise_adc) > 2) or (abs(tail_adc - last_tail_adc) > 2) ){
             
             tau_rise_ns = (rise_pot + R_SER_RISE)*C_RISE*1e9;
             tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
             
             last_rise_pot = rise_pot;
             last_tail_pot = tail_pot;
+            last_rise_adc = rise_adc;
+            last_tail_adc = tail_adc;
             display_status(0);
             //is_updated    = 0;
             scan_interval = scan_interval_fast;
