@@ -171,8 +171,12 @@ void loop() {
     if(loop_cnt == 0  ){
         
         
+        before_pot_measurement();
+        // for the capacitors to recover
+        delay(20);
         int rise_adc = meas_rise_adc();
         int tail_adc = meas_tail_adc();
+        after_pot_measurement();
         
         rise_pot = calc_rise_pot(rise_adc);
         tail_pot = calc_tail_pot(tail_adc);
@@ -209,7 +213,7 @@ void loop() {
             }
         }
         // for the capacitors to recover
-        delay(25);
+        delay(50);
     } 
     
     // display buttons

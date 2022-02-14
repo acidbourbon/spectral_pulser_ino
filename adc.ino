@@ -61,19 +61,43 @@ float meas_bat(){
 //   
 // }
 
-int meas_tail_adc(){
-  int adc_val = 0;
+
+void before_pot_measurement(){
+    
   pinMode(GPIO_TAIL, OUTPUT);
   digitalWrite(GPIO_TAIL,HIGH);
+  
+  pinMode(GPIO_RISE_A, OUTPUT);
+  digitalWrite(GPIO_RISE_A,HIGH);
+  digitalWrite(GPIO_RISE_B,HIGH);
 
-  delay(20);
-  adc_val = analogRead(ADC_TAIL);
+  //delay(20);
+}
 
+void after_pot_measurement(){
+    
   digitalWrite(GPIO_TAIL,LOW);
   pinMode(GPIO_TAIL, INPUT);  
-  delay(20);
-  return adc_val;
+  
+  digitalWrite(GPIO_RISE_A,LOW);
+  digitalWrite(GPIO_RISE_B,LOW);
+  pinMode(GPIO_RISE_A, INPUT);  
+  //delay(20);
 }
+
+
+int meas_tail_adc(){
+
+  return analogRead(ADC_TAIL);
+
+}
+
+int meas_rise_adc(){
+    
+  return analogRead(ADC_RISE);
+
+}
+
 
 int calc_tail_pot(int adc_val){
 
@@ -84,23 +108,6 @@ int calc_tail_pot(int adc_val){
   float adc_quot = float(adc_val)/1023.0 ;
   return r_ser_gpio/(1.0/adc_quot - 1.0 ) - r_ser_pot;
   
-}
-
-int meas_rise_adc(){
-    
-  int adc_val = 0;
-  pinMode(GPIO_RISE_A, OUTPUT);
-  digitalWrite(GPIO_RISE_A,HIGH);
-  digitalWrite(GPIO_RISE_B,HIGH);
-
-  delay(20);
-  adc_val = analogRead(ADC_RISE);
-
-  digitalWrite(GPIO_RISE_A,LOW);
-  digitalWrite(GPIO_RISE_B,LOW);
-  pinMode(GPIO_RISE_A, INPUT);  
-  delay(20);
-  return adc_val;
 }
 
 int calc_rise_pot(int adc_val){
