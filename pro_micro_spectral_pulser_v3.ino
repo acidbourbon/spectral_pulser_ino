@@ -173,7 +173,7 @@ void loop() {
         if( (abs(rise_pot - last_rise_pot) > 2) or (abs(tail_pot - last_tail_pot) > 2) ){
             
             tau_rise_ns = (rise_pot + R_SER_RISE)*C_RISE*1e9;
-            tau_tail_ns = (tail_pot + R_SER_TAIL + R_SER_TAIL_EXTRA)*C_TAIL*1e9;
+            tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
             
             last_rise_pot = rise_pot;
             last_tail_pot = tail_pot;

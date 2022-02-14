@@ -62,9 +62,9 @@
 #define F_CS 13
 #define SD_CS 1
 
-// #define C_RISE 10e-12
-#define C_RISE 16e-12
-#define C_TAIL 100e-12
-#define R_SER_TAIL 10.
-#define R_SER_RISE 33.+30
-#define R_SER_TAIL_EXTRA 15
+
+// empirical constants based on calib data
+#define C_RISE 12.9e-12
+#define C_TAIL 114.7e-12
+#define R_SER_TAIL 26
+#define R_SER_RISE 70.6
