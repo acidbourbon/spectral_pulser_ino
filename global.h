@@ -67,3 +67,4 @@
 #define C_TAIL 100e-12
 #define R_SER_TAIL 10.
 #define R_SER_RISE 33.+30
+#define R_SER_TAIL_EXTRA 15
