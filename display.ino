@@ -59,6 +59,10 @@ void pulse_preview(float tau_rise, float tau_fall,int clear){
       clear_plot_area();
       plot_grid(XTICS_PX,YTICS_PX);
       plot_axis_numbers(XTICS_PX,YTICS_PX);
+      tft_debug_print(288,125,1, "ns");
+      tft.setRotation(2);
+      tft_debug_print(155,4,1, "a.u.");
+      tft.setRotation(3);
     }
     
     plot_pulse(q, tau_rise, tau_fall, PULSE_DELAY,ILI9341_RED);
