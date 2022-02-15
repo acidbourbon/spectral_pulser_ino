@@ -80,8 +80,8 @@ void display_status(int clear){
     const int report_pos_y = 150;
     const int report_pos_x = 20;
     const int col2_xoffs   = 160;
-    tft_debug_print( 180,0,1,    "RisePot (R): "+String(rise_pot) +"  " );
-    tft_debug_print( 20,0,1,    "TailPot (R): "+String(tail_pot) +"  " );
+    tft_debug_print( 180,4,1,    "RisePot (R): "+String(rise_pot) +"  " );
+    tft_debug_print( 20,4,1,    "TailPot (R): "+String(tail_pot) +"  " );
     tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
     tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
     tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
@@ -102,84 +102,15 @@ void loop() {
     // once every 4 ms
     
     
-    //pulse_mv(400.*(float(read_att_pot())/1023.));
-    //   set_attenuator_dB( 31.*(float(read_att_pot())/1023.)   );
-    //   pulse_mv(400);
-    //pulse_mv_combo(400.*(float(read_att_pot())/1023.));
-    
     if(0){
         int lines = 4;
         int i = random(0,lines);
         pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
-    }else {
-        
-        //     float target_amplitude_mv = 200;
-        //     float q = abs(tau_rise_ns-tau_tail_ns)*target_amplitude_mv;
-        //     float max_amp = max_amplitude(q,tau_rise_ns,tau_tail_ns);
-        //     float factor = target_amplitude_mv/max_amp;
-        //     
-        //     
-        //     pulse_mv_combo(target_amplitude_mv*factor);
-        
-        
-        att_pot = read_att_pot();
-        raw_amp_mv = 600.*(float(att_pot)/1023.) ;
-        pulse_mv_combo(raw_amp_mv);
     }
-    //
-    //  switch(i){
-    //    case 0:
-    //      pulse_mv(300);
-    //      break;
-    //    case 1:
-    //      pulse_mv(50);
-    //      break;
-    //    case 2:
-    //      pulse_mv(100);
-    //      break;
-    //    case 3:
-    //      pulse_mv(150);
-    //      break;
-    //    case 4:
-    //      pulse_mv(200);
-    //      break;
-    //    case 5:
-    //      pulse_mv(250);
-    //      break;
-    //  }
     
+    pulse_mv_combo(raw_amp_mv);
     
     loop_cnt = (loop_cnt+1)%scan_interval;
-    
-    
-    //   if(loop_cnt == 0){
-    //         set_attenuator_dB(0);
-    //   }
-    //   if(loop_cnt == 50){
-    //         set_attenuator_dB(6);
-    //   }
-    //   if(loop_cnt == 100){
-    //         set_attenuator_dB(12);
-    //   }
-    //   if(loop_cnt == 150){
-    //         set_attenuator_dB(18);
-    //   }
-    //   if(loop_cnt == 200){
-    //         set_attenuator_dB(24);
-    //   }
-    //   if(loop_cnt == 250){
-    //         set_attenuator_dB(30);
-    //   }
-    
-    //    if(loop_cnt == 0){
-    //      Serial.print("meas_tail_pot(): ");
-    //      Serial.println(meas_tail_pot());
-    //      Serial.print("meas_rise_pot(): ");
-    //      Serial.println(meas_rise_pot());
-    //      Serial.print("meas_bat(): ");
-    //      Serial.println(meas_bat());
-    //      Serial.println();
-    //    }
     
     if(loop_cnt == 0  ){
         
@@ -190,6 +121,9 @@ void loop() {
         int rise_adc = meas_rise_adc();
         int tail_adc = meas_tail_adc();
         after_pot_measurement();
+        
+        att_pot = read_att_pot();
+        raw_amp_mv = 600.*(float(att_pot)/1023.) ;
         
         rise_pot = calc_rise_pot(rise_adc);
         tail_pot = calc_tail_pot(tail_adc);
