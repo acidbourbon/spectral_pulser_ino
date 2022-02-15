@@ -99,6 +99,7 @@ void display_status(int clear){
 
 void loop() {
     
+    // once every 4 ms
     
     
     //pulse_mv(400.*(float(read_att_pot())/1023.));
@@ -122,7 +123,7 @@ void loop() {
         
         
         att_pot = read_att_pot();
-        raw_amp_mv = 400.*(float(att_pot)/1023.) ;
+        raw_amp_mv = 600.*(float(att_pot)/1023.) ;
         pulse_mv_combo(raw_amp_mv);
     }
     //
