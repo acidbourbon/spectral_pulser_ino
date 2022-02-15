@@ -64,7 +64,7 @@ void pulse(int charge_time_us, int discharge_time_us){
 void pulse_mv_combo(float mv){
   float max_amp_mv = 400.;
   
-  float total_att = (mv+1e-9)/max_amp_mv;
+  float total_att = (mv/AMPLITUDE_CALIB_FACTOR+1e-9)/max_amp_mv;
   float total_att_dB = -20* log10(total_att);
   int half_dB_steps = int(total_att_dB*2);
   if (half_dB_steps > 63){

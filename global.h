@@ -68,3 +68,5 @@
 #define C_TAIL 114.7e-12
 #define R_SER_TAIL 26
 #define R_SER_RISE 70.6
+
+#define AMPLITUDE_CALIB_FACTOR 1.1

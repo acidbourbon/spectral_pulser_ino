@@ -203,7 +203,7 @@ void loop() {
             tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
             
             Q_pC = calc_Q_pC(raw_amp_mv,tau_tail_ns);
-            real_amp_mv = 1.1*max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
+            real_amp_mv = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
             
             last_rise_pot = rise_pot;
             last_tail_pot = tail_pot;
