@@ -51,6 +51,8 @@ void pulse(int charge_time_us, int discharge_time_us){
   digitalWrite(DAC_CHARGE,0);
 
   delayMicroseconds(500);
+  
+  set_max_attenuation();
 
   // default position
   digitalWrite(DAC_CHARGE,0);

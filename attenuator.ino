@@ -32,3 +32,8 @@ void set_attenuator_dB(float dB){
    int LSB = int(dB*2);
    set_attenuator(63-LSB);
 }
+
+void set_max_attenuation(){
+   set_attenuator(0);
+    
+}
