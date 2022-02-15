@@ -51,15 +51,19 @@ void setup() {
 
 float tau_rise_ns = 1; 
 float tau_tail_ns = 10;
+float raw_amp_mv     = 0;
+float Q_pC           = 0;
+float real_amp_mv    = 0;
 
 
 int rise_pot = 2000;
 int tail_pot = 2000;
+int att_pot  = 2000;
 int last_rise_pot = 2000;
 int last_tail_pot = 2000;
 int last_rise_adc = 2000;
 int last_tail_adc = 2000;
-//int is_updated    = 0;
+int last_att_pot  = 2000;
 
 const int update_count_down_reset_val  = 20;
 const int update_count_down_redraw_val = 15;
@@ -80,7 +84,8 @@ void display_status(int clear){
     tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
     tft_debug_print( report_pos_x,report_pos_y+10,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
     tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
-    tft_debug_print( report_pos_x,report_pos_y+30,1,    "battery   (V): "+String(meas_bat(),2 ));
+    tft_debug_print( report_pos_x,report_pos_y+30,1,    "ampl.    (mV): "+String(real_amp_mv ) +"  " );
+    tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(meas_bat(),2 ));
     
     pulse_preview(tau_rise_ns,tau_tail_ns,clear);
     
@@ -113,7 +118,9 @@ void loop() {
         //     pulse_mv_combo(target_amplitude_mv*factor);
         
         
-        pulse_mv_combo(400.*(float(read_att_pot())/1023.));
+        att_pot = read_att_pot();
+        raw_amp_mv = 400.*(float(att_pot)/1023.) ;
+        pulse_mv_combo(raw_amp_mv);
     }
     //
     //  switch(i){
@@ -184,17 +191,26 @@ void loop() {
         tail_pot = calc_tail_pot(tail_adc);
         
         
-        if( (abs(rise_adc - last_rise_adc) > 2) or (abs(tail_adc - last_tail_adc) > 2) ){
+        
+        if( (abs(rise_adc - last_rise_adc) > 2) or (abs(tail_adc - last_tail_adc) > 2)
+            or (abs(att_pot-last_att_pot)>2)
+        ){
             
             tau_rise_ns = (rise_pot + R_SER_RISE)*C_RISE*1e9;
             tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
+            
+            Q_pC = calc_Q_pC(raw_amp_mv,tau_tail_ns);
+            real_amp_mv = 1.08*max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
             
             last_rise_pot = rise_pot;
             last_tail_pot = tail_pot;
             last_rise_adc = rise_adc;
             last_tail_adc = tail_adc;
+            
+            last_att_pot = att_pot;
+            
+            
             display_status(0);
-            //is_updated    = 0;
             scan_interval = scan_interval_fast;
             update_count_down = update_count_down_reset_val;
         } else {
@@ -206,7 +222,7 @@ void loop() {
                 
             } else {
                 if (update_count_down == update_count_down_redraw_val) {
-                  display_status(1);
+                    display_status(1);
                 }
                 
                 if (update_count_down > 1) {

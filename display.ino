@@ -98,7 +98,13 @@ float peaking_time(float tau1, float tau2){
 }
 
 float max_amplitude(float q, float tau1, float tau2){
-  return q/tau1 * pow(tau1/tau2,-tau2/(tau1-tau2));
+  return 50.*q/tau1 * pow(tau1/tau2,-tau2/(tau1-tau2));
+}
+
+float calc_Q_pC(float raw_amplitude_mv, float tau2_ns){
+//   return raw_amplitude_mv/1000. * tau2_ns*1e-9 /50. *1e12;
+  // the powers of ten cancel out
+  return raw_amplitude_mv * tau2_ns /50.;
 }
 
 
