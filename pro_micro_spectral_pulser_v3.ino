@@ -79,13 +79,16 @@ int scan_interval = scan_interval_fast;
 void display_status(int clear){
     const int report_pos_y = 150;
     const int report_pos_x = 20;
+    const int col2_xoffs   = 160;
     tft_debug_print( 180,0,1,    "RisePot (R): "+String(rise_pot) +"  " );
     tft_debug_print( 20,0,1,    "TailPot (R): "+String(tail_pot) +"  " );
     tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
-    tft_debug_print( report_pos_x,report_pos_y+10,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
-    tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
-    tft_debug_print( report_pos_x,report_pos_y+30,1,    "ampl.    (mV): "+String(real_amp_mv ) +"  " );
+    tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
+    tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
+    tft_debug_print( report_pos_x,report_pos_y+30,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
     tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(meas_bat(),2 ));
+    
+    tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,1,    "charge (pC): "+String(Q_pC ) +"  " );
     
     pulse_preview(tau_rise_ns,tau_tail_ns,clear);
     
@@ -200,7 +203,7 @@ void loop() {
             tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
             
             Q_pC = calc_Q_pC(raw_amp_mv,tau_tail_ns);
-            real_amp_mv = 1.08*max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
+            real_amp_mv = 1.1*max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
             
             last_rise_pot = rise_pot;
             last_tail_pot = tail_pot;
