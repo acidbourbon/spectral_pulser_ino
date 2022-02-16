@@ -71,6 +71,8 @@ const int update_count_down_redraw_val = 15;
 int update_count_down = 0;
 
 int loop_cnt = 0;
+int meta_loop_cnt = 0;
+int meta_loop_overflow = 10;
 
 const int scan_interval_fast = 50;
 const int scan_interval_slow = 500;
@@ -115,6 +117,8 @@ void loop() {
     if(loop_cnt == 0  ){
         
         
+        
+        
         before_pot_measurement();
         // for the capacitors to recover
         delay(20);
@@ -133,7 +137,7 @@ void loop() {
         if( (abs(rise_adc - last_rise_adc) > 2) or (abs(tail_adc - last_tail_adc) > 2)
             or (abs(att_pot-last_att_pot)>2)
         ){
-            
+            meta_loop_cnt = 0;
             tau_rise_ns = (rise_pot + R_SER_RISE)*C_RISE*1e9;
             tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
             
@@ -170,6 +174,14 @@ void loop() {
         }
         // for the capacitors to recover
         delay(50);
+        
+        
+        
+        meta_loop_cnt = (meta_loop_cnt+1)%meta_loop_overflow;
+        if (meta_loop_cnt == 0){
+            // update battery reading 
+            display_status(0);
+        }
     } 
     
     // display buttons
