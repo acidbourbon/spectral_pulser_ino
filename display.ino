@@ -275,7 +275,7 @@ void display_status(uint8_t update_level){
         tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
         tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
         tft_debug_print( report_pos_x,report_pos_y+30,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(meas_bat(),2 ));
+        tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(bat_V,2 ));
         
         tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,1,    "charge (pC): "+String(Q_pC ) +"  " );
         

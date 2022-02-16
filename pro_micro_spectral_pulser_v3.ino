@@ -46,6 +46,7 @@ float tau_tail_ns = 10;
 float raw_amp_mv     = 0;
 float Q_pC           = 0;
 float real_amp_mv    = 0;
+float bat_V          = 0;
 
 
 int rise_pot = 2000;
@@ -141,7 +142,7 @@ void loop() {
       update_count_down = update_count_down_reset_val;
       
     } else if (update_count_down > 0) {
-      // is it time for a final redraw
+      // is it time for a final redraw?
       if (update_count_down == update_count_down_redraw_val) {
         display_status(0xFF); // clear plot area, redraw graph, update text
         meta_loop_cnt = 0; // delay unconditional redraw
@@ -161,6 +162,7 @@ void loop() {
     meta_loop_cnt = (meta_loop_cnt+1)%meta_loop_overflow;
     if (meta_loop_cnt == 0){
       // update battery reading 
+      bat_V = meas_bat();
       display_status(16);
     }
   } 
