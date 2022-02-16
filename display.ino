@@ -241,3 +241,40 @@ void tft_debug_print(int debug_pos_x,
   tft.print(text);
     
 }
+
+
+
+void display_status(int update_level){
+    
+    //update level:
+    // 0 just text
+    // 1 text and plot
+    // 2 text, clear plot area and plot
+    
+    // 10 just update pk ampl
+    
+    const int report_pos_y = 150;
+    const int report_pos_x = 20;
+    const int col2_xoffs   = 160;
+    
+    if (update_level < 10){
+    
+        tft_debug_print( 180,4,1,    "RisePot (R): "+String(rise_pot) +"  " );
+        tft_debug_print( 20,4,1,    "TailPot (R): "+String(tail_pot) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+30,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(meas_bat(),2 ));
+        
+        tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,1,    "charge (pC): "+String(Q_pC ) +"  " );
+        
+        if (update_level == 1){
+        pulse_preview(tau_rise_ns,tau_tail_ns,0);
+        } else if (update_level == 2){
+        pulse_preview(tau_rise_ns,tau_tail_ns,1);
+        }
+    }
+    
+    tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
+    
+}
