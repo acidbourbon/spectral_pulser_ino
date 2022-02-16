@@ -44,7 +44,15 @@ void setup() {
 }
 
 
+// ##################################################
+// ##               global variables               ##
+// ##################################################
 
+
+// common global variables
+// for all subroutines
+
+int loop_cnt = -1;
 
 float tau_rise_ns = 1; 
 float tau_tail_ns = 10;
@@ -52,7 +60,6 @@ float raw_amp_mv     = 0;
 float Q_pC           = 0;
 float real_amp_mv    = 0;
 float bat_V          = 0;
-
 
 int rise_pot = 2000;
 int tail_pot = 2000;
@@ -64,18 +71,6 @@ int last_tail_adc = 2000;
 int last_att_pot  = 2000;
 
 
-const int update_count_down_reset_val  = 20;
-const int update_count_down_redraw_val = 15;
-
-int update_count_down = 0;
-
-int loop_cnt = -1;
-int meta_loop_cnt = 0;
-int meta_loop_overflow = 10;
-
-const int scan_interval_fast = 50;
-const int scan_interval_slow = 500;
-int scan_interval = scan_interval_fast;
 
 
 void change_mode(uint8_t new_mode){
@@ -90,11 +85,11 @@ void loop() {
   // once every 4 ms
   
   
-//   if(0){
-//     int lines = 4;
-//     int i = random(0,lines);
-//     pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
-//   }
+  //   if(0){
+  //     int lines = 4;
+  //     int i = random(0,lines);
+  //     pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
+  //   }
   
   
   uint8_t buttons_pressed = adc_buttons_pressed();  
@@ -135,7 +130,7 @@ inline void attenuator_mode_subroutine(){
   
   // "setup()"
   if(loop_cnt == -1  ){
-   tft_debug_print(50,50,2,"attenuator mode"); 
+    tft_debug_print(50,50,2,"attenuator mode"); 
   }
   
   loop_cnt = (loop_cnt+1)%1000;
@@ -157,6 +152,21 @@ inline void attenuator_mode_subroutine(){
 
 
 inline void pulse_mode_subroutine(){
+  
+  // the static ("local global") variables 
+  const int update_count_down_reset_val  = 20;
+  const int update_count_down_redraw_val = 15;
+  
+  static int update_count_down = 0;
+  
+  static int meta_loop_cnt = 0;
+  static int meta_loop_overflow = 10;
+  
+  const int scan_interval_fast = 50;
+  const int scan_interval_slow = 500;
+  static int scan_interval = scan_interval_fast;
+  
+  
   
   // "setup()"
   if(loop_cnt == -1){
