@@ -11,7 +11,11 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 
 
+// the modes
 
+#define PULSE_MODE 0
+
+uint8_t mode = PULSE_MODE;
 
 
 
@@ -81,11 +85,46 @@ void loop() {
   // once every 4 ms
   
   
-  if(0){
-    int lines = 4;
-    int i = random(0,lines);
-    pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
+//   if(0){
+//     int lines = 4;
+//     int i = random(0,lines);
+//     pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
+//   }
+  
+  
+  uint8_t buttons_pressed = adc_buttons_pressed();  
+  
+  if(buttons_pressed & (1<<3)){
+    toggle_USER_LED();  
   }
+  if(buttons_pressed & (1<<2)){
+    toggle_TX_LED();  
+  }
+  if(buttons_pressed & (1<<1)){
+    toggle_RX_LED();  
+  }
+  
+  //     set_USER_LED( buttons & (1<<3) );
+  //     set_TX_LED( buttons & (1<<2) );
+  //     set_RX_LED( buttons & (1<<1) );
+  
+  
+  if (mode == PULSE_MODE){
+    pulse_mode_subroutine();
+  }
+  
+  
+}
+
+
+
+
+// ##################################################
+// ##          the PULSE MODE subroutine           ##
+// ##################################################
+
+
+inline void pulse_mode_subroutine(){
   
   pulse_mv_combo(raw_amp_mv);
   
@@ -166,23 +205,10 @@ void loop() {
     }
   } 
   
-  uint8_t buttons_pressed = adc_buttons_pressed();  
-  
-  if(buttons_pressed & (1<<3)){
-    toggle_USER_LED();  
-  }
-  if(buttons_pressed & (1<<2)){
-    toggle_TX_LED();  
-  }
-  if(buttons_pressed & (1<<1)){
-    toggle_RX_LED();  
-  }
-  
-  //     set_USER_LED( buttons & (1<<3) );
-  //     set_TX_LED( buttons & (1<<2) );
-  //     set_RX_LED( buttons & (1<<1) );
-  
-  
-  
-  
 }
+
+
+
+
+
+

@@ -86,20 +86,20 @@ void after_pot_measurement(){
 }
 
 
-int meas_tail_adc(){
+inline int meas_tail_adc(){
 
   return analogRead(ADC_TAIL);
 
 }
 
-int meas_rise_adc(){
+inline int meas_rise_adc(){
     
   return analogRead(ADC_RISE);
 
 }
 
 
-int calc_tail_pot(int adc_val){
+inline int calc_tail_pot(int adc_val){
 
   const float r_ser_gpio = 1000.0;
   const float r_ser_pot = 10.0;
@@ -110,7 +110,7 @@ int calc_tail_pot(int adc_val){
   
 }
 
-int calc_rise_pot(int adc_val){
+inline int calc_rise_pot(int adc_val){
 
   const float r_ser_gpio = 1000.0;
   const float r_ser_pot = 0.0;
@@ -121,7 +121,7 @@ int calc_rise_pot(int adc_val){
   
 }
 
-int read_att_pot(void){
+inline int read_att_pot(void){
   // i wired the poti the wrong way so inverting here
   return 1023 - analogRead(ADC_POT);
 }
