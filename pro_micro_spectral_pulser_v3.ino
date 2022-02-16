@@ -58,7 +58,6 @@ int last_rise_adc = 2000;
 int last_tail_adc = 2000;
 int last_att_pot  = 2000;
 
-uint8_t last_buttons = 0x00;
 
 const int update_count_down_reset_val  = 20;
 const int update_count_down_redraw_val = 15;
@@ -167,19 +166,16 @@ void loop() {
     }
   } 
   
-  
-  uint8_t buttons = decode_adc_buttons();  
-  uint8_t buttons_pressed = ~(last_buttons) & buttons; //detect rising edge
-  last_buttons = buttons;
+  uint8_t buttons_pressed = adc_buttons_pressed();  
   
   if(buttons_pressed & (1<<3)){
-    toggle_TX_LED();  
+    toggle_USER_LED();  
   }
   if(buttons_pressed & (1<<2)){
-    toggle_RX_LED();  
+    toggle_TX_LED();  
   }
   if(buttons_pressed & (1<<1)){
-    toggle_USER_LED();  
+    toggle_RX_LED();  
   }
   
   //     set_USER_LED( buttons & (1<<3) );

@@ -127,7 +127,16 @@ int read_att_pot(void){
 }
 
 
+uint8_t adc_buttons_pressed(){
+  static uint8_t last_last_buttons = 0x00;
+  static uint8_t last_buttons = 0x00;
 
+  uint8_t buttons = decode_adc_buttons();  
+  last_last_buttons = last_buttons;
+  last_buttons = buttons;
+  
+  return ~(last_last_buttons) & last_buttons & buttons; //detect rising edge and macroscopic on (low-high-high)
+}
 
 uint8_t decode_adc_buttons(){
 
