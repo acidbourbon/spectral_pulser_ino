@@ -19,35 +19,23 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 void setup() {
   // put your setup code here, to run once:
   
-  
   init_attenuator_pins();
   init_pulser_pins();
   init_tft_pins();
   init_adc_aux_pins();
   
-  
   randomSeed(analogRead(0));
-  
-  
   Serial.begin(115200);
-  
-  
-  
   
   tft.begin();
   tft.setRotation(3);
-  
-  
   tft.fillScreen(ILI9341_BLACK);
-  //testText();
-  //delay(1000);
   
-  //demo_plot();
   set_attenuator_dB(0);
   
-  set_TX_LED(1);
-  set_RX_LED(1);
-  set_USER_LED(1);
+  set_TX_LED(0);
+  set_RX_LED(0);
+  set_USER_LED(0);
 }
 
 
@@ -137,7 +125,7 @@ void loop() {
       
       
       
-      display_status(1); // update text and graph, but don't clear plot area
+      display_status(0xFF & ~2); // update text and graph, but don't clear plot area
       meta_loop_cnt = 0; // delay unconditional redraw
       scan_interval = scan_interval_fast;
       update_count_down = update_count_down_reset_val;
@@ -147,7 +135,7 @@ void loop() {
       Q_pC = calc_Q_pC(raw_amp_mv,tau_tail_ns);
       real_amp_mv = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
       last_att_pot = att_pot;
-      display_status(10); // just update amplitude
+      display_status(8); // just update amplitude
       meta_loop_cnt = 0; // delay unconditional redraw
       scan_interval = scan_interval_fast;
       update_count_down = update_count_down_reset_val;
@@ -155,7 +143,7 @@ void loop() {
     } else if (update_count_down > 0) {
       // is it time for a final redraw
       if (update_count_down == update_count_down_redraw_val) {
-        display_status(2); // clear plot area, redraw graph, update text
+        display_status(0xFF); // clear plot area, redraw graph, update text
         meta_loop_cnt = 0; // delay unconditional redraw
       } else if (update_count_down == 1) {
         // don't waste pulses - slower scanning for new input
@@ -173,7 +161,7 @@ void loop() {
     meta_loop_cnt = (meta_loop_cnt+1)%meta_loop_overflow;
     if (meta_loop_cnt == 0){
       // update battery reading 
-      display_status(0);
+      display_status(16);
     }
   } 
   

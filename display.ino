@@ -56,6 +56,14 @@ void pulse_preview(float tau_rise, float tau_fall,int clear){
     }
     
     if (clear){
+      prepare_plot_area();
+    }
+    
+    plot_pulse(q, tau_rise, tau_fall, PULSE_DELAY,ILI9341_RED);
+}
+    
+    
+void prepare_plot_area(){
       clear_plot_area();
       plot_grid(XTICS_PX,YTICS_PX);
       plot_axis_numbers(XTICS_PX,YTICS_PX);
@@ -63,11 +71,8 @@ void pulse_preview(float tau_rise, float tau_fall,int clear){
       tft.setRotation(2);
       tft_debug_print(155,4,1, "a.u.");
       tft.setRotation(3);
-    }
-    
-    plot_pulse(q, tau_rise, tau_fall, PULSE_DELAY,ILI9341_RED);
+  
 }
-    
 
 
 void demo_plot(void) {
@@ -244,37 +249,53 @@ void tft_debug_print(int debug_pos_x,
 
 
 
-void display_status(int update_level){
+void display_status(uint8_t update_level){
     
     //update level:
-    // 0 just text
-    // 1 text and plot
-    // 2 text, clear plot area and plot
+    // 1 general text
+    // 2 clear plot area
+    // 4 plot
     
-    // 10 just update pk ampl
+    // 8 just update pk ampl
+    // 16 just update battery 
+  
+    // these can be added
+    // if you want to update all, just do display_status(0xFF)
     
     const int report_pos_y = 150;
     const int report_pos_x = 20;
     const int col2_xoffs   = 160;
     
-        tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
     
-    if (update_level < 10){
+    if (update_level & 1){
     
         tft_debug_print( 180,4,1,    "RisePot (R): "+String(rise_pot) +"  " );
         tft_debug_print( 20,4,1,    "TailPot (R): "+String(tail_pot) +"  " );
         tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
         tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
         tft_debug_print( report_pos_x,report_pos_y+30,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
         tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(meas_bat(),2 ));
         
         tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,1,    "charge (pC): "+String(Q_pC ) +"  " );
         
-        if (update_level == 1){
-        pulse_preview(tau_rise_ns,tau_tail_ns,0);
-        } else if (update_level == 2){
-        pulse_preview(tau_rise_ns,tau_tail_ns,1);
-        }
+    } else {
+        // separate update of readings
+        // "the fast lane"
+       
+      if (update_level & 8){
+        tft_debug_print( report_pos_x+15*6,report_pos_y+10,1, String(real_amp_mv ) +"  " );
+      }
+      if (update_level & 16){
+        tft_debug_print( report_pos_x+15*6,report_pos_y+40,1, String(meas_bat(),2 ));
+      }
+    }
+    
+    if (update_level & 2){
+      prepare_plot_area();
+    }
+    if (update_level & 4){
+      pulse_preview(tau_rise_ns,tau_tail_ns,0);
     }
     
     
