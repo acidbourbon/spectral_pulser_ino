@@ -41,6 +41,12 @@ void init_tft_pins(){
 }
 
 
+
+inline void clear_screen(){
+  tft.fillScreen(ILI9341_BLACK);
+}
+
+
 void pulse_preview(float tau_rise, float tau_fall,int clear){
     //float tau_rise = 0.03;
     //float tau_fall = 20;

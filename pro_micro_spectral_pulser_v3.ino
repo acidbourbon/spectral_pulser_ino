@@ -11,9 +11,11 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 
 
-// the modes
+// the modes (state machine states)
 
+#define NO_MODES 2
 #define PULSE_MODE 0
+#define ATTENUATOR_MODE 1
 
 uint8_t mode = PULSE_MODE;
 
@@ -33,8 +35,7 @@ void setup() {
   
   tft.begin();
   tft.setRotation(3);
-  tft.fillScreen(ILI9341_BLACK);
-  
+  clear_screen();
   set_attenuator_dB(0);
   
   set_TX_LED(0);
@@ -68,7 +69,7 @@ const int update_count_down_redraw_val = 15;
 
 int update_count_down = 0;
 
-int loop_cnt = 0;
+int loop_cnt = -1;
 int meta_loop_cnt = 0;
 int meta_loop_overflow = 10;
 
@@ -77,7 +78,11 @@ const int scan_interval_slow = 500;
 int scan_interval = scan_interval_fast;
 
 
-
+void change_mode(uint8_t new_mode){
+  mode = new_mode%NO_MODES;
+  clear_screen();
+  loop_cnt = -1; // this is how you identify a mode change
+}
 
 
 void loop() {
@@ -96,6 +101,8 @@ void loop() {
   
   if(buttons_pressed & (1<<3)){
     toggle_USER_LED();  
+    
+    change_mode(mode+1);
   }
   if(buttons_pressed & (1<<2)){
     toggle_TX_LED();  
@@ -111,10 +118,35 @@ void loop() {
   
   if (mode == PULSE_MODE){
     pulse_mode_subroutine();
+  } else if (mode == ATTENUATOR_MODE){
+    attenuator_mode_subroutine();  
   }
   
   
 }
+
+// ##################################################
+// ##          ATTENUATOR MODE subroutine          ##
+// ##################################################
+
+
+inline void attenuator_mode_subroutine(){
+  
+  
+  // "setup()"
+  if(loop_cnt == -1  ){
+   tft_debug_print(50,50,2,"attenuator mode"); 
+  }
+  
+  loop_cnt = (loop_cnt+1)%1000;
+  
+}
+
+
+
+
+
+
 
 
 
@@ -126,11 +158,13 @@ void loop() {
 
 inline void pulse_mode_subroutine(){
   
-  pulse_mv_combo(raw_amp_mv);
+  // "setup()"
+  if(loop_cnt == -1){
+    prepare_plot_area();
+  }
   
-  loop_cnt = (loop_cnt+1)%scan_interval;
   
-  if(loop_cnt == 0  ){
+  if(loop_cnt <= 0 ){
     
     
     
@@ -150,7 +184,7 @@ inline void pulse_mode_subroutine(){
     
     
     // has rise or tail pot turned?
-    if( (abs(rise_adc - last_rise_adc) > 2) or (abs(tail_adc - last_tail_adc) > 2) ){
+    if( (abs(rise_adc - last_rise_adc) > 2) or (abs(tail_adc - last_tail_adc) > 2) or (loop_cnt == -1) ){
       tau_rise_ns = (rise_pot + R_SER_RISE)*C_RISE*1e9;
       tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
       
@@ -204,6 +238,11 @@ inline void pulse_mode_subroutine(){
       display_status(16);
     }
   } 
+  
+  // order a pulse
+  pulse_mv_combo(raw_amp_mv);
+  
+  loop_cnt = (loop_cnt+1)%scan_interval;
   
 }
 
