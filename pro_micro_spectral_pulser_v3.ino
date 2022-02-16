@@ -138,7 +138,7 @@ void loop() {
             
             
             
-            display_status(1);
+            display_status(1); // update text and graph, but don't clear plot area
             scan_interval = scan_interval_fast;
             update_count_down = update_count_down_reset_val;
         
@@ -155,7 +155,7 @@ void loop() {
         } else {
             if (update_count_down == 1) {
                 
-                display_status(2);
+                //display_status(2);
                 update_count_down = 0;
                 scan_interval = scan_interval_slow;
                 

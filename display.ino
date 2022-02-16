@@ -257,6 +257,8 @@ void display_status(int update_level){
     const int report_pos_x = 20;
     const int col2_xoffs   = 160;
     
+        tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
+    
     if (update_level < 10){
     
         tft_debug_print( 180,4,1,    "RisePot (R): "+String(rise_pot) +"  " );
@@ -275,7 +277,6 @@ void display_status(int update_level){
         }
     }
     
-    tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
     
 }
 
