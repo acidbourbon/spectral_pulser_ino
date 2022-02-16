@@ -47,6 +47,34 @@ inline void clear_screen(){
 }
 
 
+void draw_footer(
+    String a,
+    String b,
+    String c,
+    String d  ){
+  
+  const int footer_line_height = 12;
+  const int footer_text_height = 10;
+    tft.drawLine(0,DISPLAY_HEIGHT-footer_line_height,
+                 DISPLAY_WIDTH,DISPLAY_HEIGHT-footer_line_height,
+                 PLOT_GRID_COL);
+  
+  tft_debug_print(DISPLAY_WIDTH/4*0,
+                  DISPLAY_HEIGHT-footer_text_height,1,
+                  "A: "+a);
+  tft_debug_print(DISPLAY_WIDTH/4*1,
+                  DISPLAY_HEIGHT-footer_text_height,1,
+                  "B: "+b);
+  tft_debug_print(DISPLAY_WIDTH/4*2,
+                  DISPLAY_HEIGHT-footer_text_height,1,
+                  "C: "+c);
+  tft_debug_print(DISPLAY_WIDTH/4*3,
+                  DISPLAY_HEIGHT-footer_text_height,1,
+                  "D: "+d);
+    
+}
+
+
 void pulse_preview(float tau_rise, float tau_fall,int clear){
     //float tau_rise = 0.03;
     //float tau_fall = 20;

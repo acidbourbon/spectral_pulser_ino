@@ -106,9 +106,6 @@ void loop() {
     toggle_RX_LED();  
   }
   
-  //     set_USER_LED( buttons & (1<<3) );
-  //     set_TX_LED( buttons & (1<<2) );
-  //     set_RX_LED( buttons & (1<<1) );
   
   
   if (mode == PULSE_MODE){
@@ -131,6 +128,7 @@ inline void attenuator_mode_subroutine(){
   // "setup()"
   if(loop_cnt == -1  ){
     tft_debug_print(50,50,2,"attenuator mode"); 
+    draw_footer("ch mode","dummy","dummy","dummy");
   }
   
   loop_cnt = (loop_cnt+1)%1000;
@@ -170,6 +168,7 @@ inline void pulse_mode_subroutine(){
   
   // "setup()"
   if(loop_cnt == -1){
+    draw_footer("ch mode","dummy","dummy","dummy");
     prepare_plot_area();
   }
   
