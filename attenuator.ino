@@ -14,7 +14,7 @@ void init_attenuator_pins(){
 
 
 void set_attenuator(int val){
-  for (int i = 7; i >=0 ; i--){
+  for (int i = 5; i >=0 ; i--){
     digitalWrite(ATT_CLK, 0);
     
     digitalWrite(ATT_SDI, (val&(1<<i))>>i );
