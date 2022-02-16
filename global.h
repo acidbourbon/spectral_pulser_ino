@@ -62,6 +62,10 @@
 #define F_CS 13
 #define SD_CS 1
 
+#define USER_LED 13
+#define RX_LED   17
+//TX_LED PD5
+
 
 // empirical constants based on calib data
 #define C_RISE 12.9e-12

@@ -44,6 +44,10 @@ void setup() {
     
     //demo_plot();
     set_attenuator_dB(0);
+    
+    set_TX_LED(1);
+    set_RX_LED(1);
+    set_USER_LED(1);
 }
 
 
@@ -97,6 +101,30 @@ void display_status(int clear){
 }
 
 
+
+void set_TX_LED(int state){
+  if(state > 0){
+    PORTD &= ~(1<<5);
+  } else {
+    PORTD |= 1<<5;  
+  }
+}
+
+void set_RX_LED(int state){
+  if(state > 0){
+    digitalWrite(RX_LED,0);
+  } else {
+    digitalWrite(RX_LED,1);
+  }
+}
+
+void set_USER_LED(int state){
+  if(state > 0){
+    digitalWrite(USER_LED,1);
+  } else {
+    digitalWrite(USER_LED,0);
+  }
+}
 
 
 void loop() {
@@ -184,18 +212,25 @@ void loop() {
         }
     } 
     
+    
+    int buttons = decode_adc_buttons();           
+    
+    set_USER_LED( buttons & (1<<3) );
+    set_TX_LED( buttons & (1<<2) );
+    set_RX_LED( buttons & (1<<1) );
+    
     // display buttons
-    if(0){ 
-        String dummy ="";
-        int buttons = decode_adc_buttons();           
-        for (int j = 3; j>=0; j--)
-            dummy += String((buttons&(1<<j))>>j);          
-        
-        
-        tft_debug_print( 20,200,2,dummy);
-        
-        tft_debug_print( 200,200,2,String(read_att_pot()));
-    }
+//     if(0){ 
+//         String dummy ="";
+//         int buttons = decode_adc_buttons();           
+//         for (int j = 3; j>=0; j--)
+//             dummy += String((buttons&(1<<j))>>j);          
+//         
+//         
+//         tft_debug_print( 20,200,2,dummy);
+//         
+//         tft_debug_print( 200,200,2,String(read_att_pot()));
+//     }
     
     
     
