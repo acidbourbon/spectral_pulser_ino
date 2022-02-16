@@ -69,6 +69,8 @@ int last_rise_adc = 2000;
 int last_tail_adc = 2000;
 int last_att_pot  = 2000;
 
+uint8_t last_buttons = 0x00;
+
 const int update_count_down_reset_val  = 20;
 const int update_count_down_redraw_val = 15;
 
@@ -182,24 +184,24 @@ void loop() {
     } 
     
     
-    int buttons = decode_adc_buttons();           
+    uint8_t buttons = decode_adc_buttons();  
+    uint8_t buttons_pressed = ~(last_buttons) & buttons; //detect rising edge
+    last_buttons = buttons;
     
-    set_USER_LED( buttons & (1<<3) );
-    set_TX_LED( buttons & (1<<2) );
-    set_RX_LED( buttons & (1<<1) );
+    if(buttons_pressed & (1<<3)){
+      toggle_TX_LED();  
+    }
+    if(buttons_pressed & (1<<2)){
+      toggle_RX_LED();  
+    }
+    if(buttons_pressed & (1<<1)){
+      toggle_USER_LED();  
+    }
     
-    // display buttons
-//     if(0){ 
-//         String dummy ="";
-//         int buttons = decode_adc_buttons();           
-//         for (int j = 3; j>=0; j--)
-//             dummy += String((buttons&(1<<j))>>j);          
-//         
-//         
-//         tft_debug_print( 20,200,2,dummy);
-//         
-//         tft_debug_print( 200,200,2,String(read_att_pot()));
-//     }
+//     set_USER_LED( buttons & (1<<3) );
+//     set_TX_LED( buttons & (1<<2) );
+//     set_RX_LED( buttons & (1<<1) );
+    
     
     
     

@@ -22,3 +22,14 @@ void set_USER_LED(int state){
     digitalWrite(USER_LED,0);
   }
 }
+
+
+void toggle_TX_LED(){
+  PORTD ^= 1<<5;
+}
+void toggle_RX_LED(){
+  PORTB ^= 1<<0;
+}
+void toggle_USER_LED(){
+  PORTC ^= 1<<7;
+}

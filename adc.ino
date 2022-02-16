@@ -129,7 +129,7 @@ int read_att_pot(void){
 
 
 
-int decode_adc_buttons(){
+uint8_t decode_adc_buttons(){
 
 
   const int button_adc_pin = ADC_BUTTONS ;

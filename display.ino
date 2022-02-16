@@ -278,3 +278,16 @@ void display_status(int update_level){
     tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
     
 }
+
+    // display buttons
+//     if(0){ 
+//         String dummy ="";
+//         int buttons = decode_adc_buttons();           
+//         for (int j = 3; j>=0; j--)
+//             dummy += String((buttons&(1<<j))>>j);          
+//         
+//         
+//         tft_debug_print( 20,200,2,dummy);
+//         
+//         tft_debug_print( 200,200,2,String(read_att_pot()));
+//     }
