@@ -94,29 +94,17 @@ void loop() {
   //   }
   
   
-  buttons_pressed = adc_buttons_pressed();  
-  
-  if(buttons_pressed & BUTTON_A){
-    toggle_USER_LED();  
-    
-    change_mode(mode+1);
-  }
-  if(buttons_pressed & BUTTON_B){
-    toggle_TX_LED();  
-  }
-  if(buttons_pressed & BUTTON_C){
-    toggle_RX_LED();  
-  }
-  if(buttons_pressed & BUTTON_D){
-    toggle_USER_LED();  
-  }
   
   
   
-  if (mode == PULSE_MODE){
-    pulse_mode_subroutine();
-  } else if (mode == ATTENUATOR_MODE){
-    attenuator_mode_subroutine();  
+  
+  switch (mode){
+    case PULSE_MODE:
+      pulse_mode_subroutine();
+      break;
+    case ATTENUATOR_MODE:
+      attenuator_mode_subroutine();  
+      break;
   }
   
   
@@ -136,7 +124,32 @@ void attenuator_mode_subroutine(){
     draw_footer(ch_mode,dummy,dummy,dummy);
   }
   
+  
+  delay(5);
+ 
+  // must be before button things
   loop_cnt = (loop_cnt+1)%1000;
+  
+  // specific button actions
+  // don't evaluate buttons that often
+  if((loop_cnt % 5) == 0){
+    buttons_pressed = adc_buttons_pressed();  
+    if(buttons_pressed & BUTTON_A){
+      toggle_USER_LED();  
+      
+      change_mode(mode+1);
+    }
+    if(buttons_pressed & BUTTON_B){
+      toggle_TX_LED();  
+    }
+    if(buttons_pressed & BUTTON_C){
+      toggle_RX_LED();  
+    }
+    if(buttons_pressed & BUTTON_D){
+      toggle_USER_LED();  
+    }
+  }
+  
   
 }
 
@@ -277,12 +290,29 @@ void pulse_mode_subroutine(){
   // order a pulse
   pulse_mv_combo(raw_amp_mv);
   
+  // must be before button things
   loop_cnt = (loop_cnt+1)%scan_interval;
   
   // specific button actions
-  if(buttons_pressed & BUTTON_D){
-    amp_range = (amp_range +1)%AMP_RANGES;
-    loop_cnt = -1;
+  // don't evaluate buttons that often
+  if((loop_cnt % 5) == 0){
+    buttons_pressed = adc_buttons_pressed();  
+    if(buttons_pressed & BUTTON_A){
+      toggle_USER_LED();  
+      
+      change_mode(mode+1);
+    }
+    if(buttons_pressed & BUTTON_B){
+      toggle_TX_LED();  
+    }
+    if(buttons_pressed & BUTTON_C){
+      toggle_RX_LED();  
+    }
+    if(buttons_pressed & BUTTON_D){
+      toggle_USER_LED();  
+      amp_range = (amp_range +1)%AMP_RANGES;
+      loop_cnt = -1;
+    }
   }
   
 }
