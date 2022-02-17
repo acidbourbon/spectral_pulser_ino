@@ -343,7 +343,7 @@ void display_status(uint8_t update_level){
         // "the fast lane"
        
       if (update_level & 8){
-        tft_debug_print( report_pos_x+15*6,report_pos_y+10,1, String(real_amp_mV ) +"  " );
+        tft_debug_print( report_pos_x+15*6,report_pos_y+10,1, String(real_amp_mV,1 ) +"  " );
       }
       if (update_level & 16){
         tft_debug_print( report_pos_x+15*6,report_pos_y+40,1, String(meas_bat(),2 ));
