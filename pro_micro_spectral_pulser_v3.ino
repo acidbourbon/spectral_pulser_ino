@@ -127,7 +127,7 @@ void loop() {
 // ##################################################
 
 
-inline void attenuator_mode_subroutine(){
+void attenuator_mode_subroutine(){
   
   
   // "setup()"
@@ -159,7 +159,7 @@ inline void attenuator_mode_subroutine(){
 #define AMP_RANGE_50MV  1
 #define AMP_RANGE_5MV   2
 
-inline void pulse_mode_subroutine(){
+void pulse_mode_subroutine(){
   
   // the static ("local global") variables 
   const int update_count_down_reset_val  = 20;

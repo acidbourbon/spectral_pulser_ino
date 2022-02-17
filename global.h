@@ -2,6 +2,18 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
 
+inline void clear_screen() __attribute__((always_inline));
+
+inline int meas_tail_adc() __attribute__((always_inline));
+inline int meas_rise_adc() __attribute__((always_inline));
+inline int calc_tail_pot(int adc_val) __attribute__((always_inline));
+inline int calc_rise_pot(int adc_val) __attribute__((always_inline));
+inline int read_att_pot(void) __attribute__((always_inline));
+  
+inline void set_attenuator_dB(float dB) __attribute__((always_inline));
+inline void set_max_attenuation() __attribute__((always_inline));
+inline void attenuator_mode_subroutine() __attribute__((always_inline));
+inline void pulse_mode_subroutine() __attribute__((always_inline));
 
 
 #define GLCD_CL_BLACK 0x0000

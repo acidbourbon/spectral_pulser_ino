@@ -42,7 +42,9 @@ void init_tft_pins(){
 
 
 
-inline void clear_screen(){
+inline void clear_screen() __attribute__((always_inline));
+
+void clear_screen() {
   tft.fillScreen(ILI9341_BLACK);
 }
 
