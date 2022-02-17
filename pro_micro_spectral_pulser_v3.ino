@@ -209,6 +209,11 @@ void pulse_mode_subroutine(){
     
     
     
+    // blink the user LED when we are in the fast scannig mode
+    if(scan_interval == scan_interval_fast){
+      toggle_USER_LED();
+    }
+    
     
     before_pot_measurement();
     // for the capacitors to recover
@@ -267,6 +272,7 @@ void pulse_mode_subroutine(){
       } else if (update_count_down == 1) {
         // don't waste pulses - slower scanning for new input
         scan_interval = scan_interval_slow;
+        set_USER_LED(0);
       }
       // count down until you reach zero
       update_count_down --;
