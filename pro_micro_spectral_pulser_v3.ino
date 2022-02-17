@@ -272,6 +272,7 @@ void pulse_mode_subroutine(){
       } else if (update_count_down == 1) {
         // don't waste pulses - slower scanning for new input
         scan_interval = scan_interval_slow;
+        add_pk_ampl_to_plot();
         set_USER_LED(0);
       }
       // count down until you reach zero

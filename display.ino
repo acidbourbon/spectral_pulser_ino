@@ -24,8 +24,8 @@ const int YTICS_PX = 18;
 const float XTICS = 10;
 const float YTICS = 20;
 
-const float XSCALE = 1.0/XTICS_PX * XTICS; 
-const float YSCALE = 1.0/YTICS_PX * YTICS;
+const float XSCALE = 1.0/XTICS_PX * XTICS; // you multiply #pixels by XSCALE to go to the real number x
+const float YSCALE = 1.0/YTICS_PX * YTICS; // you divide f(x) by YSCALE to go to vertical pixels on screen
 
 const float PULSE_DELAY = 10;
 
@@ -42,7 +42,6 @@ void init_tft_pins(){
 
 
 
-inline void clear_screen() __attribute__((always_inline));
 
 void clear_screen() {
   tft.fillScreen(ILI9341_BLACK);
@@ -81,19 +80,35 @@ void draw_footer(
 }
 
 
+void add_pk_ampl_to_plot(){
+  
+  const int yoffset = PLOT_POS_Y+PLOT_HEIGHT;
+  const int xoffset = PLOT_POS_X;
+  const int width   = PLOT_WIDTH;
+  
+  
+  tft.setCursor(
+    xoffset + (PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))*XSCALE,
+    yoffset - (10*YSCALE)
+  );
+  tft.setTextColor(ILI9341_RED);
+  tft.setTextSize(1);
+  tft.print(real_amp_mv);
+}
+
 void pulse_preview(float tau_rise, float tau_fall,int clear){
     //float tau_rise = 0.03;
     //float tau_fall = 20;
-    const int normalize = 0;
+    //const int normalize = 0;
     
     float q = abs(tau_rise-tau_fall)*100;// if tau rise super small, then abs ampl is 70
     //float tdelay = 20;
     
-    if(normalize){
-      float max_amp = max_amplitude(q,tau_rise,tau_fall);
-      // scale to 100 %
-      q = q*100./max_amp;
-    }
+    //if(normalize){
+    //  float max_amp = max_amplitude(q,tau_rise,tau_fall);
+    //  // scale to 100 %
+    //  q = q*100./max_amp;
+    //}
     
     if (clear){
       prepare_plot_area();

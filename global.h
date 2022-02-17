@@ -16,6 +16,15 @@ inline void attenuator_mode_subroutine() __attribute__((always_inline));
 inline void pulse_mode_subroutine() __attribute__((always_inline));
 
 
+
+inline float peaking_time(float tau1, float tau2)             __attribute__((always_inline));
+inline float max_amplitude(float q, float tau1, float tau2)   __attribute__((always_inline));
+inline float calc_Q_pC(float raw_amplitude_mv, float tau2_ns) __attribute__((always_inline)); 
+
+
+inline float pulse_func(const float x, const float q, const float tau_rise, const float tau_fall, const float tdelay)  __attribute__((always_inline));
+
+
 #define GLCD_CL_BLACK 0x0000
 #define GLCD_CL_WHITE 0xFFFF
 #define GLCD_CL_GRAY 0x7BEF
