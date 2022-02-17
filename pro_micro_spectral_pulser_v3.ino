@@ -73,6 +73,7 @@ uint8_t buttons_pressed = 0;
 
 const String dummy   = "";
 const String ch_mode = "ch mode";
+uint8_t amp_range = AMP_RANGE_500MV;
 
 
 void change_mode(uint8_t new_mode){
@@ -166,11 +167,6 @@ void attenuator_mode_subroutine(){
 // ##          the PULSE MODE subroutine           ##
 // ##################################################
 
-#define AMP_RANGES      3
-
-#define AMP_RANGE_500MV 0
-#define AMP_RANGE_50MV  1
-#define AMP_RANGE_5MV   2
 
 void pulse_mode_subroutine(){
   
@@ -187,7 +183,6 @@ void pulse_mode_subroutine(){
   const int scan_interval_slow = 500;
   static int scan_interval = scan_interval_fast;
   
-  static uint8_t amp_range = AMP_RANGE_500MV;
   
   
   // "setup()"
@@ -223,7 +218,7 @@ void pulse_mode_subroutine(){
     after_pot_measurement();
     
     att_pot = read_att_pot();
-    raw_amp_mV = 600.*(float(att_pot)/1023.) ;
+    raw_amp_mV = MAX_DESIGN_AMP*(float(att_pot)/1023.) ;
     if (amp_range == AMP_RANGE_50MV){
       raw_amp_mV /=10.;
     } else if (amp_range == AMP_RANGE_5MV){

@@ -8,8 +8,8 @@ const int DISPLAY_WIDTH = 320;
 const int DISPLAY_HEIGHT = 240;
 
 const int PLOT_POS_X = 35;
-const int PLOT_POS_Y = 20;
-const int PLOT_HEIGHT = 100;
+const int PLOT_POS_Y = 16;
+const int PLOT_HEIGHT = 120;
 const int PLOT_WIDTH = 260;
 
 const int PLOT_BACKGND_COL = ILI9341_BLACK;
@@ -22,10 +22,10 @@ const int XTICS_PX = 24;
 const int YTICS_PX = 18;
 
 const float XTICS = 10;
-const float YTICS = 20;
+float YTICS = 100;
 
 const float XSCALE = 1.0/XTICS_PX * XTICS; // you multiply #pixels by XSCALE to go to the real number x
-const float YSCALE = 1.0/YTICS_PX * YTICS; // you divide f(x) by YSCALE to go to vertical pixels on screen
+float YSCALE = 1.0/YTICS_PX * YTICS; // you divide f(x) by YSCALE to go to vertical pixels on screen
 
 const float PULSE_DELAY = 10;
 
@@ -88,8 +88,8 @@ void add_pk_ampl_to_plot(){
   const int xoffset = PLOT_POS_X;
   const int width   = PLOT_WIDTH;
  
-  float q = abs(tau_rise_ns-tau_tail_ns);
-  float y_pos = max_amplitude(q,tau_rise_ns,tau_tail_ns)*2.;
+  //float q = abs(tau_rise_ns-tau_tail_ns);
+  float y_pos = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
   
   tft.setCursor(
     xoffset + int((PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))/XSCALE) -5, // divide by XSCALE to go to pixels
@@ -100,35 +100,35 @@ void add_pk_ampl_to_plot(){
   tft.print(String(real_amp_mV,1)+" mV");
 }
 
-void pulse_preview(float tau_rise_ns, float tau_tail_ns,int clear){
-    //float tau_rise = 0.03;
-    //float tau_tail = 20;
-    //const int normalize = 0;
-    
-    float q = abs(tau_rise_ns-tau_tail_ns)*100;// if tau rise super small, then abs ampl is 70
-    //float tdelay = 20;
-    
-    //if(normalize){
-    //  float max_amp = max_amplitude(q,tau_rise_ns,tau_tail_ns);
-    //  // scale to 100 %
-    //  q = q*100./max_amp;
-    //}
-    
-    if (clear){
-      prepare_plot_area();
-    }
-    
-    plot_pulse(q, tau_rise_ns, tau_tail_ns, PULSE_DELAY,ILI9341_RED);
-}
+// void pulse_preview(int clear){
+//     //float tau_rise = 0.03;
+//     //float tau_tail = 20;
+//     //const int normalize = 0;
+//     
+//     //float q = abs(tau_rise_ns-tau_tail_ns)*100;// if tau rise super small, then abs ampl is 70
+//     //float tdelay = 20;
+//     
+//     //if(normalize){
+//     //  float max_amp = max_amplitude(q,tau_rise_ns,tau_tail_ns);
+//     //  // scale to 100 %
+//     //  q = q*100./max_amp;
+//     //}
+//     
+//     if (clear){
+//       prepare_plot_area();
+//     }
+//     
+//     plot_pulse(Q_pC, tau_rise_ns, tau_tail_ns, PULSE_DELAY,ILI9341_RED);
+// }
     
     
 void prepare_plot_area(){
       clear_plot_area();
       plot_grid(XTICS_PX,YTICS_PX);
       plot_axis_numbers(XTICS_PX,YTICS_PX);
-      tft_debug_print(288,125,1, "ns");
+      tft_debug_print(288,PLOT_POS_Y+PLOT_HEIGHT+5,1, "ns");
       tft.setRotation(2);
-      tft_debug_print(155,4,1, "a.u.");
+      tft_debug_print(155,4,1, "mV");
       tft.setRotation(3);
   
 }
@@ -174,14 +174,15 @@ float calc_Q_pC(float raw_amplitude_mV, float tau2_ns){
 
 float pulse_func(const float x, const float q, const float tau_rise, const float tau_tail, const float tdelay){
   float x_ = x-tdelay;
-  return (x_>0) * q/(tau_rise - tau_tail)*(exp(-x_/tau_rise) - exp(-x_/tau_tail));
+  const float impedance = 50;
+  return (x_>0) * impedance * q/(tau_rise - tau_tail)*(exp(-x_/tau_rise) - exp(-x_/tau_tail));
 }
 
 void clear_plot_area(){
   // don't fill whole screen, just overwrite the plot area
-  tft.fillRect(PLOT_POS_X,
+  tft.fillRect(PLOT_POS_X-20,
                PLOT_POS_Y,
-               PLOT_WIDTH,
+               PLOT_WIDTH+20,
                PLOT_HEIGHT,
                PLOT_BACKGND_COL);
   
@@ -321,9 +322,42 @@ void display_status(uint8_t update_level){
     // these can be added
     // if you want to update all, just do display_status(0xFF)
     
-    const int report_pos_y = 150;
+    const int report_pos_y = 170;
     const int report_pos_x = 20;
     const int col2_xoffs   = 160;
+    
+    
+    
+    if(        amp_range == AMP_RANGE_500MV){
+      if (raw_amp_mV < 120){
+        YTICS = 20;
+        YSCALE = 1.0/YTICS_PX * YTICS;
+      } else if (raw_amp_mV < 300){
+        YTICS = 50;
+        YSCALE = 1.0/YTICS_PX * YTICS;
+      } else {
+        YTICS = 100;
+        YSCALE = 1.0/YTICS_PX * YTICS;
+      }
+    } else if (amp_range == AMP_RANGE_50MV){
+      if (raw_amp_mV < 12){
+        YTICS = 2;
+        YSCALE = 1.0/YTICS_PX * YTICS;
+      } else if (raw_amp_mV < 30){
+        YTICS = 5;
+        YSCALE = 1.0/YTICS_PX * YTICS;
+      } else {
+        YTICS = 10;
+        YSCALE = 1.0/YTICS_PX * YTICS;
+      }
+    } else {
+      YTICS = 1;
+      YSCALE = 1.0/YTICS_PX * YTICS; 
+//       if (raw_amp_mV < 3){
+//         YTICS = .5;
+//         YSCALE = 1.0/YTICS_PX * YTICS;
+//       }
+    }
     
     
     if (update_level & 1){
@@ -354,7 +388,9 @@ void display_status(uint8_t update_level){
       prepare_plot_area();
     }
     if (update_level & 4){
-      pulse_preview(tau_rise_ns,tau_tail_ns,0);
+      //pulse_preview(tau_rise_ns,tau_tail_ns,0);
+      //pulse_preview(0);
+      plot_pulse(Q_pC, tau_rise_ns, tau_tail_ns, PULSE_DELAY,ILI9341_RED);
     }
     
     

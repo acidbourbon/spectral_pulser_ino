@@ -66,7 +66,7 @@ void pulse(int charge_time_us, int discharge_time_us){
 }
 
 void pulse_mV_combo(float mv){
-  float max_amp_mV = 600.;
+  const float max_amp_mV = MAX_DESIGN_AMP;
   
   float total_att = (mv/AMPLITUDE_CALIB_FACTOR+1e-9)/max_amp_mV;
   float total_att_dB = -20* log10(total_att);

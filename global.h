@@ -56,6 +56,15 @@ inline float pulse_func(const float x, const float q, const float tau_rise, cons
 #define BUTTON_C (1<<1)
 #define BUTTON_D (1<<0)
 
+
+#define AMP_RANGES      3
+
+#define AMP_RANGE_500MV 0
+#define AMP_RANGE_50MV  1
+#define AMP_RANGE_5MV   2
+
+#define MAX_DESIGN_AMP 600
+
 // Arduino Pro Micro 3.3V
 // == LilyPad Arduino USB
 
