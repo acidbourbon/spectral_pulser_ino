@@ -85,15 +85,18 @@ void add_pk_ampl_to_plot(){
   const int yoffset = PLOT_POS_Y+PLOT_HEIGHT;
   const int xoffset = PLOT_POS_X;
   const int width   = PLOT_WIDTH;
+ 
+  
   
   
   tft.setCursor(
-    xoffset + (PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))*XSCALE,
-    yoffset - (10*YSCALE)
+    xoffset + (PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))/XSCALE -5, // divide by XSCALE to go to pixels
+//     yoffset - ( 100.*real_amp_mv/raw_amp_mv)/YSCALE  // divide by YSCALE to go to pixels
+    yoffset - 10 -   max_amplitude(abs(tau_rise_ns-tau_fall_ns)*100., tau_rise_ns,tau_fall_ns)/YSCALE; // -10 because of text height
   );
   tft.setTextColor(ILI9341_RED);
   tft.setTextSize(1);
-  tft.print(real_amp_mv);
+  tft.print(String(real_amp_mv)+" mV");
 }
 
 void pulse_preview(float tau_rise, float tau_fall,int clear){
