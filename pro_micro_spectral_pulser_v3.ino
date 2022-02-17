@@ -254,7 +254,7 @@ void pulse_mode_subroutine(){
       Q_pC = calc_Q_pC(raw_amp_mV,tau_tail_ns);
       real_amp_mV = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
       last_att_pot = att_pot;
-      display_status(8); // just update amplitude
+      display_status(8+4); // just update amplitude and plot
       meta_loop_cnt = 0; // delay unconditional redraw
       scan_interval = scan_interval_fast;
       update_count_down = update_count_down_reset_val;

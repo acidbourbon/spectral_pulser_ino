@@ -328,36 +328,6 @@ void display_status(uint8_t update_level){
     
     
     
-    if(        amp_range == AMP_RANGE_500MV){
-      if (real_amp_mV < 120){
-        YTICS = 20;
-        YSCALE = 1.0/YTICS_PX * YTICS;
-      } else if (real_amp_mV < 300){
-        YTICS = 50;
-        YSCALE = 1.0/YTICS_PX * YTICS;
-      } else {
-        YTICS = 100;
-        YSCALE = 1.0/YTICS_PX * YTICS;
-      }
-    } else if (amp_range == AMP_RANGE_50MV){
-      if (real_amp_mV < 12){
-        YTICS = 2;
-        YSCALE = 1.0/YTICS_PX * YTICS;
-      } else if (real_amp_mV < 30){
-        YTICS = 5;
-        YSCALE = 1.0/YTICS_PX * YTICS;
-      } else {
-        YTICS = 10;
-        YSCALE = 1.0/YTICS_PX * YTICS;
-      }
-    } else {
-      YTICS = 1;
-      YSCALE = 1.0/YTICS_PX * YTICS; 
-//       if (raw_amp_mV < 3){
-//         YTICS = .5;
-//         YSCALE = 1.0/YTICS_PX * YTICS;
-//       }
-    }
     
     
     if (update_level & 1){
@@ -385,6 +355,36 @@ void display_status(uint8_t update_level){
     }
     
     if (update_level & 2){
+      if(        amp_range == AMP_RANGE_500MV){
+        if (real_amp_mV < 120){
+          YTICS = 20;
+          YSCALE = 1.0/YTICS_PX * YTICS;
+        } else if (real_amp_mV < 300){
+          YTICS = 50;
+          YSCALE = 1.0/YTICS_PX * YTICS;
+        } else {
+          YTICS = 100;
+          YSCALE = 1.0/YTICS_PX * YTICS;
+        }
+      } else if (amp_range == AMP_RANGE_50MV){
+        if (real_amp_mV < 12){
+          YTICS = 2;
+          YSCALE = 1.0/YTICS_PX * YTICS;
+        } else if (real_amp_mV < 30){
+          YTICS = 5;
+          YSCALE = 1.0/YTICS_PX * YTICS;
+        } else {
+          YTICS = 10;
+          YSCALE = 1.0/YTICS_PX * YTICS;
+        }
+      } else {
+        YTICS = 1;
+        YSCALE = 1.0/YTICS_PX * YTICS; 
+        //       if (raw_amp_mV < 3){
+        //         YTICS = .5;
+        //         YSCALE = 1.0/YTICS_PX * YTICS;
+        //       }
+      }
       prepare_plot_area();
     }
     if (update_level & 4){
