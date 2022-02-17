@@ -82,33 +82,34 @@ void draw_footer(
 
 void add_pk_ampl_to_plot(){
   
+  // please, I can't explain how i calculate the y pos, i just leave it at that
+  
   const int yoffset = PLOT_POS_Y+PLOT_HEIGHT;
   const int xoffset = PLOT_POS_X;
   const int width   = PLOT_WIDTH;
  
-  
-  
+  float q = abs(tau_rise_ns-tau_tail_ns);
+  float y_pos = max_amplitude(q,tau_rise_ns,tau_tail_ns)*2.;
   
   tft.setCursor(
-    xoffset + (PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))/XSCALE -5, // divide by XSCALE to go to pixels
-//     yoffset - ( 100.*real_amp_mv/raw_amp_mv)/YSCALE  // divide by YSCALE to go to pixels
-    yoffset - 10 -   max_amplitude(abs(tau_rise_ns-tau_fall_ns)*100., tau_rise_ns,tau_fall_ns)/YSCALE; // -10 because of text height
+    xoffset + int((PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))/XSCALE) -5, // divide by XSCALE to go to pixels
+    yoffset - 10 - int(y_pos/YSCALE) // -10 because of text height
   );
   tft.setTextColor(ILI9341_RED);
   tft.setTextSize(1);
-  tft.print(String(real_amp_mv)+" mV");
+  tft.print(String(real_amp_mV,1)+" mV");
 }
 
-void pulse_preview(float tau_rise, float tau_fall,int clear){
+void pulse_preview(float tau_rise_ns, float tau_tail_ns,int clear){
     //float tau_rise = 0.03;
-    //float tau_fall = 20;
+    //float tau_tail = 20;
     //const int normalize = 0;
     
-    float q = abs(tau_rise-tau_fall)*100;// if tau rise super small, then abs ampl is 70
+    float q = abs(tau_rise_ns-tau_tail_ns)*100;// if tau rise super small, then abs ampl is 70
     //float tdelay = 20;
     
     //if(normalize){
-    //  float max_amp = max_amplitude(q,tau_rise,tau_fall);
+    //  float max_amp = max_amplitude(q,tau_rise_ns,tau_tail_ns);
     //  // scale to 100 %
     //  q = q*100./max_amp;
     //}
@@ -117,7 +118,7 @@ void pulse_preview(float tau_rise, float tau_fall,int clear){
       prepare_plot_area();
     }
     
-    plot_pulse(q, tau_rise, tau_fall, PULSE_DELAY,ILI9341_RED);
+    plot_pulse(q, tau_rise_ns, tau_tail_ns, PULSE_DELAY,ILI9341_RED);
 }
     
     
@@ -139,18 +140,18 @@ void demo_plot(void) {
   
   
     float tau_rise = 0.03;
-    float tau_fall = 20;
-    float q = abs(tau_rise-tau_fall)*100;// if tau rise super small, then abs ampl is 70
+    float tau_tail = 20;
+    float q = abs(tau_rise-tau_tail)*100;// if tau rise super small, then abs ampl is 70
     //float tdelay = 20;
     
     clear_plot_area();
     plot_grid(XTICS_PX,YTICS_PX);
     plot_axis_numbers(XTICS_PX,YTICS_PX);
     
-    plot_pulse(q, tau_rise, tau_fall, PULSE_DELAY,ILI9341_RED);
-    plot_pulse(q, 2.5, tau_fall, PULSE_DELAY,ILI9341_YELLOW);
-    plot_pulse(q, 5, tau_fall, PULSE_DELAY,ILI9341_GREEN);
-    plot_pulse(q, 10, tau_fall, PULSE_DELAY,ILI9341_BLUE);
+    plot_pulse(q, tau_rise, tau_tail, PULSE_DELAY,ILI9341_RED);
+    plot_pulse(q, 2.5, tau_tail, PULSE_DELAY,ILI9341_YELLOW);
+    plot_pulse(q, 5, tau_tail, PULSE_DELAY,ILI9341_GREEN);
+    plot_pulse(q, 10, tau_tail, PULSE_DELAY,ILI9341_BLUE);
     
     //delay(2000);
 
@@ -164,16 +165,16 @@ float max_amplitude(float q, float tau1, float tau2){
   return 50.*q/tau1 * pow(tau1/tau2,-tau2/(tau1-tau2));
 }
 
-float calc_Q_pC(float raw_amplitude_mv, float tau2_ns){
-//   return raw_amplitude_mv/1000. * tau2_ns*1e-9 /50. *1e12;
+float calc_Q_pC(float raw_amplitude_mV, float tau2_ns){
+//   return raw_amplitude_mV/1000. * tau2_ns*1e-9 /50. *1e12;
   // the powers of ten cancel out
-  return raw_amplitude_mv * tau2_ns /50.;
+  return raw_amplitude_mV * tau2_ns /50.;
 }
 
 
-float pulse_func(const float x, const float q, const float tau_rise, const float tau_fall, const float tdelay){
+float pulse_func(const float x, const float q, const float tau_rise, const float tau_tail, const float tdelay){
   float x_ = x-tdelay;
-  return (x_>0) * q/(tau_rise - tau_fall)*(exp(-x_/tau_rise) - exp(-x_/tau_fall));
+  return (x_>0) * q/(tau_rise - tau_tail)*(exp(-x_/tau_rise) - exp(-x_/tau_tail));
 }
 
 void clear_plot_area(){
@@ -222,7 +223,7 @@ void plot_axis_numbers(int xtics_px, int ytics_px){
   
 }
 
-void plot_pulse(float q, float tau_rise, float tau_fall, float tdelay, int plotcolor){
+void plot_pulse(float q, float tau_rise, float tau_tail, float tdelay, int plotcolor){
   
   const int yoffset = PLOT_POS_Y+PLOT_HEIGHT;
   const int xoffset = PLOT_POS_X;
@@ -238,7 +239,7 @@ void plot_pulse(float q, float tau_rise, float tau_fall, float tdelay, int plotc
   
   for (int i = 0; i < width; i++){
     int x = i;
-    int y = int(pulse_func(float(x*XSCALE),q, tau_rise, tau_fall, tdelay) * 1/YSCALE);
+    int y = int(pulse_func(float(x*XSCALE),q, tau_rise, tau_tail, tdelay) * 1/YSCALE);
     
     
     
@@ -329,10 +330,10 @@ void display_status(uint8_t update_level){
     
         tft_debug_print( 180,4,1,    "RisePot (R): "+String(rise_pot) +"  " );
         tft_debug_print( 20,4,1,    "TailPot (R): "+String(tail_pot) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns) ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mv ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+30,1,    "tau_tail (ns): "+String(tau_tail_ns ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns),1 ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mV,1 ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns,1 ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+30,1,    "tau_tail (ns): "+String(tau_tail_ns,1 ) +"  " );
         tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(bat_V,2 ));
         
         tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,1,    "charge (pC): "+String(Q_pC ) +"  " );
@@ -342,7 +343,7 @@ void display_status(uint8_t update_level){
         // "the fast lane"
        
       if (update_level & 8){
-        tft_debug_print( report_pos_x+15*6,report_pos_y+10,1, String(real_amp_mv ) +"  " );
+        tft_debug_print( report_pos_x+15*6,report_pos_y+10,1, String(real_amp_mV ) +"  " );
       }
       if (update_level & 16){
         tft_debug_print( report_pos_x+15*6,report_pos_y+40,1, String(meas_bat(),2 ));

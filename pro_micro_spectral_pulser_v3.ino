@@ -56,9 +56,9 @@ int loop_cnt = -1;
 
 float tau_rise_ns = 1; 
 float tau_tail_ns = 10;
-float raw_amp_mv     = 0;
+float raw_amp_mV     = 0;
 float Q_pC           = 0;
-float real_amp_mv    = 0;
+float real_amp_mV    = 0;
 float bat_V          = 0;
 
 int rise_pot = 2000;
@@ -90,7 +90,7 @@ void loop() {
   //   if(0){
   //     int lines = 4;
   //     int i = random(0,lines);
-  //     pulse_mv_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
+  //     pulse_mV_combo(4*10*pow(2,i) ); // 10 because 20 db attenuator
   //   }
   
   
@@ -223,11 +223,11 @@ void pulse_mode_subroutine(){
     after_pot_measurement();
     
     att_pot = read_att_pot();
-    raw_amp_mv = 600.*(float(att_pot)/1023.) ;
+    raw_amp_mV = 600.*(float(att_pot)/1023.) ;
     if (amp_range == AMP_RANGE_50MV){
-      raw_amp_mv /=10.;
+      raw_amp_mV /=10.;
     } else if (amp_range == AMP_RANGE_5MV){
-      raw_amp_mv /=100;
+      raw_amp_mV /=100;
     }
     
     rise_pot = calc_rise_pot(rise_adc);
@@ -239,8 +239,8 @@ void pulse_mode_subroutine(){
       tau_rise_ns = (rise_pot + R_SER_RISE)*C_RISE*1e9;
       tau_tail_ns = (tail_pot + R_SER_TAIL)*C_TAIL*1e9;
       
-      Q_pC = calc_Q_pC(raw_amp_mv,tau_tail_ns);
-      real_amp_mv = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
+      Q_pC = calc_Q_pC(raw_amp_mV,tau_tail_ns);
+      real_amp_mV = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
       
       last_rise_pot = rise_pot;
       last_tail_pot = tail_pot;
@@ -256,8 +256,8 @@ void pulse_mode_subroutine(){
       
       // has attenuator poti turned?
     } else if (abs(att_pot-last_att_pot)>2){
-      Q_pC = calc_Q_pC(raw_amp_mv,tau_tail_ns);
-      real_amp_mv = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
+      Q_pC = calc_Q_pC(raw_amp_mV,tau_tail_ns);
+      real_amp_mV = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
       last_att_pot = att_pot;
       display_status(8); // just update amplitude
       meta_loop_cnt = 0; // delay unconditional redraw
@@ -295,7 +295,7 @@ void pulse_mode_subroutine(){
   
   
   // order a pulse
-  pulse_mv_combo(raw_amp_mv);
+  pulse_mV_combo(raw_amp_mV);
   
   // must be before button things
   loop_cnt = (loop_cnt+1)%scan_interval;

@@ -10,7 +10,7 @@ void init_pulser_pins(){
 }
 
 
-void pulse_mv(float mv){
+void pulse_mV(float mv){
 
   //const float scale_voltage = 1.5;
   const float scale_voltage = 2.0;
@@ -65,10 +65,10 @@ void pulse(int charge_time_us, int discharge_time_us){
   
 }
 
-void pulse_mv_combo(float mv){
-  float max_amp_mv = 600.;
+void pulse_mV_combo(float mv){
+  float max_amp_mV = 600.;
   
-  float total_att = (mv/AMPLITUDE_CALIB_FACTOR+1e-9)/max_amp_mv;
+  float total_att = (mv/AMPLITUDE_CALIB_FACTOR+1e-9)/max_amp_mV;
   float total_att_dB = -20* log10(total_att);
   int half_dB_steps = int(total_att_dB*2);
   if (half_dB_steps > 63){
@@ -77,5 +77,5 @@ void pulse_mv_combo(float mv){
   set_attenuator(63-half_dB_steps);
   
   float rest_att_linear = total_att/pow(10, -float(half_dB_steps)/40. );
-  pulse_mv(rest_att_linear * max_amp_mv);
+  pulse_mV(rest_att_linear * max_amp_mV);
 }
