@@ -126,7 +126,7 @@ void prepare_plot_area(){
       clear_plot_area();
       plot_grid(XTICS_PX,YTICS_PX);
       plot_axis_numbers(XTICS_PX,YTICS_PX);
-      tft_debug_print(288,PLOT_POS_Y+PLOT_HEIGHT+5,1, "ns");
+      tft_debug_print(PLOT_POS_X+PLOT_WIDTH-6,PLOT_POS_Y+PLOT_HEIGHT+5,1, "ns");
       tft.setRotation(2);
       tft_debug_print(155,4,1, "mV");
       tft.setRotation(3);
@@ -329,10 +329,10 @@ void display_status(uint8_t update_level){
     
     
     if(        amp_range == AMP_RANGE_500MV){
-      if (raw_amp_mV < 120){
+      if (real_amp_mV < 120){
         YTICS = 20;
         YSCALE = 1.0/YTICS_PX * YTICS;
-      } else if (raw_amp_mV < 300){
+      } else if (real_amp_mV < 300){
         YTICS = 50;
         YSCALE = 1.0/YTICS_PX * YTICS;
       } else {
@@ -340,10 +340,10 @@ void display_status(uint8_t update_level){
         YSCALE = 1.0/YTICS_PX * YTICS;
       }
     } else if (amp_range == AMP_RANGE_50MV){
-      if (raw_amp_mV < 12){
+      if (real_amp_mV < 12){
         YTICS = 2;
         YSCALE = 1.0/YTICS_PX * YTICS;
-      } else if (raw_amp_mV < 30){
+      } else if (real_amp_mV < 30){
         YTICS = 5;
         YSCALE = 1.0/YTICS_PX * YTICS;
       } else {
