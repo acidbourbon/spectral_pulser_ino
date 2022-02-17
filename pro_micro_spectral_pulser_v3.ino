@@ -69,8 +69,10 @@ int last_tail_pot = 2000;
 int last_rise_adc = 2000;
 int last_tail_adc = 2000;
 int last_att_pot  = 2000;
+uint8_t buttons_pressed = 0;
 
-
+const String dummy   = "";
+const String ch_mode = "ch mode";
 
 
 void change_mode(uint8_t new_mode){
@@ -92,18 +94,21 @@ void loop() {
   //   }
   
   
-  uint8_t buttons_pressed = adc_buttons_pressed();  
+  buttons_pressed = adc_buttons_pressed();  
   
-  if(buttons_pressed & (1<<3)){
+  if(buttons_pressed & BUTTON_A){
     toggle_USER_LED();  
     
     change_mode(mode+1);
   }
-  if(buttons_pressed & (1<<2)){
+  if(buttons_pressed & BUTTON_B){
     toggle_TX_LED();  
   }
-  if(buttons_pressed & (1<<1)){
+  if(buttons_pressed & BUTTON_C){
     toggle_RX_LED();  
+  }
+  if(buttons_pressed & BUTTON_D){
+    toggle_USER_LED();  
   }
   
   
@@ -128,7 +133,7 @@ inline void attenuator_mode_subroutine(){
   // "setup()"
   if(loop_cnt == -1  ){
     tft_debug_print(50,50,2,"attenuator mode"); 
-    draw_footer("ch mode","dummy","dummy","dummy");
+    draw_footer(ch_mode,dummy,dummy,dummy);
   }
   
   loop_cnt = (loop_cnt+1)%1000;
@@ -148,6 +153,11 @@ inline void attenuator_mode_subroutine(){
 // ##          the PULSE MODE subroutine           ##
 // ##################################################
 
+#define AMP_RANGES      3
+
+#define AMP_RANGE_500MV 0
+#define AMP_RANGE_50MV  1
+#define AMP_RANGE_5MV   2
 
 inline void pulse_mode_subroutine(){
   
@@ -164,11 +174,20 @@ inline void pulse_mode_subroutine(){
   const int scan_interval_slow = 500;
   static int scan_interval = scan_interval_fast;
   
+  static uint8_t amp_range = AMP_RANGE_500MV;
   
   
   // "setup()"
   if(loop_cnt == -1){
-    draw_footer("ch mode","dummy","dummy","dummy");
+    String d_str = "";
+    if(        amp_range == AMP_RANGE_500MV){
+      d_str = "0-500mV";
+    } else if (amp_range == AMP_RANGE_50MV){
+      d_str = "0-50mV";
+    } else {
+      d_str = "0-5mV";
+    }
+    draw_footer(ch_mode,dummy,dummy,d_str);
     prepare_plot_area();
   }
   
@@ -187,6 +206,11 @@ inline void pulse_mode_subroutine(){
     
     att_pot = read_att_pot();
     raw_amp_mv = 600.*(float(att_pot)/1023.) ;
+    if (amp_range == AMP_RANGE_50MV){
+      raw_amp_mv /=10.;
+    } else if (amp_range == AMP_RANGE_5MV){
+      raw_amp_mv /=100;
+    }
     
     rise_pot = calc_rise_pot(rise_adc);
     tail_pot = calc_tail_pot(tail_adc);
@@ -248,10 +272,18 @@ inline void pulse_mode_subroutine(){
     }
   } 
   
+  
+  
   // order a pulse
   pulse_mv_combo(raw_amp_mv);
   
   loop_cnt = (loop_cnt+1)%scan_interval;
+  
+  // specific button actions
+  if(buttons_pressed & BUTTON_D){
+    amp_range = (amp_range +1)%AMP_RANGES;
+    loop_cnt = -1;
+  }
   
 }
 

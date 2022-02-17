@@ -30,6 +30,11 @@
 
 #define DARK_GREY_BLUE 0x0105
 
+#define BUTTON_A (1<<3)
+#define BUTTON_B (1<<2)
+#define BUTTON_C (1<<1)
+#define BUTTON_D (1<<0)
+
 // Arduino Pro Micro 3.3V
 // == LilyPad Arduino USB
 

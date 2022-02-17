@@ -58,6 +58,10 @@ void draw_footer(
     tft.drawLine(0,DISPLAY_HEIGHT-footer_line_height,
                  DISPLAY_WIDTH,DISPLAY_HEIGHT-footer_line_height,
                  PLOT_GRID_COL);
+    
+  tft.fillRect(0,DISPLAY_HEIGHT-footer_text_height,
+               DISPLAY_WIDTH,   footer_text_height,
+               PLOT_BACKGND_COL);
   
   tft_debug_print(DISPLAY_WIDTH/4*0,
                   DISPLAY_HEIGHT-footer_text_height,1,

@@ -161,9 +161,11 @@ uint8_t decode_adc_buttons(){
 // ADC: 0810-0848, bit code: 1100
 // ADC: 0850-0888, bit code: 1000
   
+  //delayMicroseconds(100);
   int adcval = analogRead(button_adc_pin);
   
-  if (adcval <= 18)
+  //if (adcval <= 18)
+  if (adcval <= 100)
     return 0b0000;
   else if (adcval <= 253)
     return 0b0001;
