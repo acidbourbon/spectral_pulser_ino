@@ -118,18 +118,34 @@ void loop() {
 
 void attenuator_mode_subroutine(){
   
+  const int col1_x = 30;
+  const int col1_y = 50;
+  
+  const int l1_y = col1_y;
+  const int l2_y = col1_y+30;
+  const int l3_y = l2_y+30;
   
   // "setup()"
   if(loop_cnt == -1  ){
-    tft_debug_print(50,50,2,"attenuator mode"); 
+    tft_debug_print(col1_x,l1_y,2,"attenuator mode"); 
+    tft_debug_print(col1_x,l2_y,2,"attenuation (dB): "); 
+    tft_debug_print(col1_x,l3_y,2,"U_out/U_in      : "); 
     draw_footer(ch_mode,dummy,dummy,dummy);
   }
   
+  att_pot = read_att_pot();
+  if (abs(att_pot-last_att_pot)>4 or (loop_cnt == -1)){
+    last_att_pot = att_pot;
+    float attenuation_dB = 63./2.*(1-float(att_pot)/1023.) ;
+    attenuation_dB = set_attenuator_dB(attenuation_dB) +1.; // 1 dB is insertion loss
+    tft_debug_print(col1_x+18*6*2,l2_y,2,String(attenuation_dB,1)+" "); 
+    tft_debug_print(col1_x+18*6*2,l3_y,2,String(pow(10,-attenuation_dB/20.),3)+" "); 
+  }
   
   delay(5);
- 
+  
   // must be before button things
-  loop_cnt = (loop_cnt+1)%1000;
+  loop_cnt = (loop_cnt+1)%100;
   
   // specific button actions
   // don't evaluate buttons that often

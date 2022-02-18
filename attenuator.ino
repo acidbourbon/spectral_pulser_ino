@@ -48,9 +48,10 @@ void set_attenuator(int val){
     //     //digitalWrite(ATT_SDI, 0);
 }
 
-void set_attenuator_dB(float dB){
+float set_attenuator_dB(float dB){
    int LSB = int(dB*2);
    set_attenuator(63-LSB);
+   return LSB/2.;
 }
 
 void set_max_attenuation(){

@@ -10,7 +10,7 @@ inline int calc_tail_pot(int adc_val) __attribute__((always_inline));
 inline int calc_rise_pot(int adc_val) __attribute__((always_inline));
 inline int read_att_pot(void) __attribute__((always_inline));
   
-inline void set_attenuator_dB(float dB) __attribute__((always_inline));
+inline float set_attenuator_dB(float dB) __attribute__((always_inline));
 inline void set_max_attenuation() __attribute__((always_inline));
 inline void attenuator_mode_subroutine() __attribute__((always_inline));
 inline void pulse_mode_subroutine() __attribute__((always_inline));
