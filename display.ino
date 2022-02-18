@@ -51,11 +51,11 @@ void draw_lemo(int x, int y){
 void draw_lemos_and_jumper_field(){
     draw_lemo(30,30);
     draw_lemo(320/2-30/2,30);
-    tft_debug_print(320/2-30/2,8,2,"in"); 
-    tft_debug_print(320/2-30/2+5,30+30+3,1,"50R"); 
+    tft_debug_print(320/2-30/2,8,"in",GLCD_CL_WHITE,2); 
+    tft_debug_print(320/2-30/2+5,30+30+3,"50R"); 
     draw_lemo(320-30-30,30);
-    tft_debug_print(320-30-30,8,2,"out"); 
-    tft_debug_print(320-30-30+5,30+30+3,1,"50R"); 
+    tft_debug_print(320-30-30,8,"out",GLCD_CL_WHITE,2); 
+    tft_debug_print(320-30-30+5,30+30+3,"50R"); 
     
    
     // the jumper field surrounding box
@@ -93,16 +93,16 @@ void draw_footer(
                PLOT_BACKGND_COL);
   
   tft_debug_print(DISPLAY_WIDTH/4*0,
-                  DISPLAY_HEIGHT-footer_text_height,1,
+                  DISPLAY_HEIGHT-footer_text_height,
                   "A: "+a);
   tft_debug_print(DISPLAY_WIDTH/4*1,
-                  DISPLAY_HEIGHT-footer_text_height,1,
+                  DISPLAY_HEIGHT-footer_text_height,
                   "B: "+b);
   tft_debug_print(DISPLAY_WIDTH/4*2,
-                  DISPLAY_HEIGHT-footer_text_height,1,
+                  DISPLAY_HEIGHT-footer_text_height,
                   "C: "+c);
   tft_debug_print(DISPLAY_WIDTH/4*3,
-                  DISPLAY_HEIGHT-footer_text_height,1,
+                  DISPLAY_HEIGHT-footer_text_height,
                   "D: "+d);
     
 }
@@ -133,9 +133,9 @@ void prepare_plot_area(){
       clear_plot_area();
       plot_grid(XTICS_PX,YTICS_PX);
       plot_axis_numbers(XTICS_PX,YTICS_PX);
-      tft_debug_print(PLOT_POS_X+PLOT_WIDTH-6,PLOT_POS_Y+PLOT_HEIGHT+5,1, "ns");
+      tft_debug_print(PLOT_POS_X+PLOT_WIDTH-6,PLOT_POS_Y+PLOT_HEIGHT+5, "ns");
       tft.setRotation(2);
-      tft_debug_print(155,4,1, "mV");
+      tft_debug_print(155,4, "mV");
       tft.setRotation(3);
   
 }
@@ -297,9 +297,9 @@ void plot_pulse(float q, float tau_rise, float tau_tail, float tdelay, int plotc
 
 void tft_debug_print(int debug_pos_x,
                      int debug_pos_y,
-                     int size,
                      String text,
-                     int color
+                     int color,
+                     int size
                     ) {
     
   tft.fillRect(debug_pos_x,
@@ -339,25 +339,25 @@ void display_status(uint8_t update_level){
     
     if (update_level & 1){
     
-        tft_debug_print( 180,4,1,    "RisePot (R): "+String(rise_pot) +"  " );
-        tft_debug_print( 20,4,1,    "TailPot (R): "+String(tail_pot) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y   ,1,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns),1 ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+10,1,    "pk_ampl. (mV): "+String(real_amp_mV,1 ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+20,1,    "tau_rise (ns): "+String(tau_rise_ns,1 ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+30,1,    "tau_tail (ns): "+String(tau_tail_ns,1 ) +"  " );
-        tft_debug_print( report_pos_x,report_pos_y+40,1,    "battery   (V): "+String(bat_V,2 ));
+        tft_debug_print( 180,4,    "RisePot (R): "+String(rise_pot) +"  " );
+        tft_debug_print( 20,4,    "TailPot (R): "+String(tail_pot) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y   ,    "pk_time  (ns): "+String(  peaking_time(tau_rise_ns,tau_tail_ns),1 ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+10,    "pk_ampl. (mV): "+String(real_amp_mV,1 ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+20,    "tau_rise (ns): "+String(tau_rise_ns,1 ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+30,    "tau_tail (ns): "+String(tau_tail_ns,1 ) +"  " );
+        tft_debug_print( report_pos_x,report_pos_y+40,    "battery   (V): "+String(bat_V,2 ));
         
-        tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,1,    "charge (pC): "+String(Q_pC ) +"  " );
+        tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,    "charge (pC): "+String(Q_pC ) +"  " );
         
     } else {
         // separate update of readings
         // "the fast lane"
        
       if (update_level & 8){
-        tft_debug_print( report_pos_x+15*6,report_pos_y+10,1, String(real_amp_mV,1 ) +"  " );
+        tft_debug_print( report_pos_x+15*6,report_pos_y+10, String(real_amp_mV,1 ) +"  " );
       }
       if (update_level & 16){
-        tft_debug_print( report_pos_x+15*6,report_pos_y+40,1, String(meas_bat(),2 ));
+        tft_debug_print( report_pos_x+15*6,report_pos_y+40, String(meas_bat(),2 ));
       }
     }
     
@@ -387,31 +387,13 @@ void display_status(uint8_t update_level){
       } else {
         YTICS = 1;
         YSCALE = 1.0/YTICS_PX * YTICS; 
-        //       if (raw_amp_mV < 3){
-        //         YTICS = .5;
-        //         YSCALE = 1.0/YTICS_PX * YTICS;
-        //       }
       }
       prepare_plot_area();
     }
     if (update_level & 4){
-      //pulse_preview(tau_rise_ns,tau_tail_ns,0);
-      //pulse_preview(0);
       plot_pulse(Q_pC, tau_rise_ns, tau_tail_ns, PULSE_DELAY,ILI9341_RED);
     }
     
     
 }
 
-    // display buttons
-//     if(0){ 
-//         String dummy ="";
-//         int buttons = decode_adc_buttons();           
-//         for (int j = 3; j>=0; j--)
-//             dummy += String((buttons&(1<<j))>>j);          
-//         
-//         
-//         tft_debug_print( 20,200,2,dummy);
-//         
-//         tft_debug_print( 200,200,2,String(read_att_pot()));
-//     }

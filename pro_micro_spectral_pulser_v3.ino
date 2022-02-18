@@ -129,10 +129,10 @@ void attenuator_mode_subroutine(){
   
   // "setup()"
   if(loop_cnt == -1  ){
-    tft_debug_print(col1_x,l1_y,2,"attenuator mode",GLCD_CL_RED); 
-    tft_debug_print(col1_x,l2_y,2,"attenuation (dB): "); 
-    tft_debug_print(col1_x,l3_y,2,"U_out/U_in      : "); 
-    tft_debug_print(col1_x,l4_y,2,"U_in/U_out      : "); 
+    tft_debug_print(col1_x,l1_y,"attenuator mode",GLCD_CL_RED,2); 
+    tft_debug_print(col1_x,l2_y,"attenuation (dB): ",GLCD_CL_WHITE,2); 
+    tft_debug_print(col1_x,l3_y,"U_out/U_in      : ",GLCD_CL_WHITE,2); 
+    tft_debug_print(col1_x,l4_y,"U_in/U_out      : ",GLCD_CL_WHITE,2); 
     
     draw_lemos_and_jumper_field();
     draw_footer(ch_mode,dummy,dummy,dummy);
@@ -143,9 +143,9 @@ void attenuator_mode_subroutine(){
     last_att_pot = att_pot;
     float attenuation_dB = 63./2.*(1-float(att_pot)/1023.) ;
     attenuation_dB = set_attenuator_dB(attenuation_dB) +1.; // 1 dB is insertion loss
-    tft_debug_print(col1_x+18*6*2,l2_y,2,String(attenuation_dB,1)+" "); 
-    tft_debug_print(col1_x+18*6*2,l3_y,2,String(pow(10,-attenuation_dB/20.),3)+" "); 
-    tft_debug_print(col1_x+18*6*2,l4_y,2,String(pow(10,attenuation_dB/20.),2)+" "); 
+    tft_debug_print(col1_x+18*6*2,l2_y,String(attenuation_dB,1)+" ",GLCD_CL_WHITE,2); 
+    tft_debug_print(col1_x+18*6*2,l3_y,String(pow(10,-attenuation_dB/20.),3)+" ",GLCD_CL_WHITE,2); 
+    tft_debug_print(col1_x+18*6*2,l4_y,String(pow(10,attenuation_dB/20.),2)+" ",GLCD_CL_WHITE,2); 
   }
   
   delay(5);

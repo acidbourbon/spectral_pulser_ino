@@ -59,9 +59,9 @@ inline void draw_lemos_and_jumper_field() __attribute__((always_inline));
 
 void tft_debug_print(int debug_pos_x,
                      int debug_pos_y,
-                     int size,
                      String text,
-                     int color = GLCD_CL_WHITE
+                     int color = GLCD_CL_WHITE,
+                     int size = 1
                     );
 
 
