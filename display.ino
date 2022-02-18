@@ -301,7 +301,9 @@ unsigned long testText() {
 void tft_debug_print(int debug_pos_x,
                      int debug_pos_y,
                      int size,
-                     String text) {
+                     String text,
+                     int color
+                    ) {
     
   tft.fillRect(debug_pos_x,
                debug_pos_y,
@@ -310,7 +312,7 @@ void tft_debug_print(int debug_pos_x,
                ILI9341_BLACK);
                
   tft.setCursor(debug_pos_x,debug_pos_y);
-  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(size);
+  tft.setTextColor(color);  tft.setTextSize(size);
   tft.print(text);
     
 }

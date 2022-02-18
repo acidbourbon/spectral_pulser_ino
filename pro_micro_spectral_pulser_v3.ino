@@ -128,7 +128,7 @@ void attenuator_mode_subroutine(){
   
   // "setup()"
   if(loop_cnt == -1  ){
-    tft_debug_print(col1_x,l1_y,2,"attenuator mode"); 
+    tft_debug_print(col1_x,l1_y,2,"attenuator mode",GLCD_CL_RED); 
     tft_debug_print(col1_x,l2_y,2,"attenuation (dB): "); 
     tft_debug_print(col1_x,l3_y,2,"U_out/U_in      : "); 
     
@@ -156,7 +156,7 @@ void attenuator_mode_subroutine(){
   }
   
   att_pot = read_att_pot();
-  if (abs(att_pot-last_att_pot)>4 or (loop_cnt == -1)){
+  if (abs(att_pot-last_att_pot)>10 or (loop_cnt == -1)){
     last_att_pot = att_pot;
     float attenuation_dB = 63./2.*(1-float(att_pot)/1023.) ;
     attenuation_dB = set_attenuator_dB(attenuation_dB) +1.; // 1 dB is insertion loss

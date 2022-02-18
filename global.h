@@ -25,6 +25,7 @@ inline float calc_Q_pC(float raw_amplitude_mV, float tau2_ns) __attribute__((alw
 inline float pulse_func(const float x, const float q, const float tau_rise, const float tau_tail, const float tdelay)  __attribute__((always_inline));
 
 
+
 #define GLCD_CL_BLACK 0x0000
 #define GLCD_CL_WHITE 0xFFFF
 #define GLCD_CL_GRAY 0x7BEF
@@ -50,6 +51,16 @@ inline float pulse_func(const float x, const float q, const float tau_rise, cons
 #define GLCD_CL_OLIVE 0x7BE0
 
 #define DARK_GREY_BLUE 0x0105
+
+
+
+void tft_debug_print(int debug_pos_x,
+                     int debug_pos_y,
+                     int size,
+                     String text,
+                     int color = GLCD_CL_WHITE
+                    );
+
 
 #define BUTTON_A (1<<3)
 #define BUTTON_B (1<<2)
