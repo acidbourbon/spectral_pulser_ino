@@ -42,6 +42,14 @@ void init_tft_pins(){
 
 
 
+void draw_lemo(int x, int y){
+  
+    tft.drawRect  (x,   y,29,29,GLCD_CL_LIGHT_GRAY);
+    tft.drawCircle(x+14,y+14,13,GLCD_CL_LIGHT_GRAY);
+    tft.drawCircle(x+14,y+14,2,GLCD_CL_LIGHT_GRAY);
+}
+
+
 
 void clear_screen() {
   tft.fillScreen(ILI9341_BLACK);

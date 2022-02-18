@@ -17,7 +17,6 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 #define PULSE_MODE 0
 #define ATTENUATOR_MODE 1
 
-uint8_t mode = PULSE_MODE;
 
 
 
@@ -51,6 +50,8 @@ void setup() {
 
 // common global variables
 // for all subroutines
+// uint8_t mode = PULSE_MODE;
+uint8_t mode = ATTENUATOR_MODE;
 
 int loop_cnt = -1;
 
@@ -119,7 +120,7 @@ void loop() {
 void attenuator_mode_subroutine(){
   
   const int col1_x = 30;
-  const int col1_y = 50;
+  const int col1_y = 100;
   
   const int l1_y = col1_y;
   const int l2_y = col1_y+30;
@@ -130,6 +131,27 @@ void attenuator_mode_subroutine(){
     tft_debug_print(col1_x,l1_y,2,"attenuator mode"); 
     tft_debug_print(col1_x,l2_y,2,"attenuation (dB): "); 
     tft_debug_print(col1_x,l3_y,2,"U_out/U_in      : "); 
+    
+    draw_lemo(30,30);
+    draw_lemo(320/2-30/2,30);
+    tft_debug_print(320/2-30/2,8,2,"in"); 
+    tft_debug_print(320/2-30/2+5,30+30+3,1,"50R"); 
+    draw_lemo(320-30-30,30);
+    tft_debug_print(320-30-30,8,2,"out"); 
+    tft_debug_print(320-30-30+5,30+30+3,1,"50R"); 
+    
+   
+    // the jumper field surrounding box
+    tft.drawRect  (320/2+32,25,46,46,GLCD_CL_LIGHT_GRAY);
+    // the jumper
+    tft.fillRect  (320/2+32+6+1*14-3,25+6-3,12,26,GLCD_CL_BLUE);
+    tft.fillRect  (320/2+32+6+1*14,25+6,6,20,GLCD_CL_BROWN);
+   
+    // the jumper matrix
+    for(uint8_t i = 0; i<3;i++)
+      for(uint8_t j = 0; j<3;j++)
+        tft.fillRect  (320/2+32+6+i*14,25+6+j*14,6,6,GLCD_CL_ORANGE);
+      
     draw_footer(ch_mode,dummy,dummy,dummy);
   }
   
