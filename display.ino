@@ -348,6 +348,7 @@ void display_status(uint8_t update_level){
         tft_debug_print( report_pos_x,report_pos_y+40,    "battery   (V): "+String(bat_V,2 ));
         
         tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+0,    "charge (pC): "+String(Q_pC ) +"  " );
+        tft_debug_print( report_pos_x+col2_xoffs,report_pos_y+10,   "lines      : "+String(lines ) +"  " );
         
     } else {
         // separate update of readings

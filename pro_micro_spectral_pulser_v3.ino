@@ -50,8 +50,8 @@ void setup() {
 
 // common global variables
 // for all subroutines
-// uint8_t mode = PULSE_MODE;
-uint8_t mode = ATTENUATOR_MODE;
+uint8_t mode = PULSE_MODE;
+// uint8_t mode = ATTENUATOR_MODE;
 
 int loop_cnt = -1;
 
@@ -75,6 +75,8 @@ uint8_t buttons_pressed = 0;
 const String dummy   = "";
 const String ch_mode = "ch mode";
 uint8_t amp_range = AMP_RANGE_500MV;
+
+uint8_t lines = 1;
 
 
 void change_mode(uint8_t new_mode){
@@ -207,6 +209,7 @@ void pulse_mode_subroutine(){
   
   
   
+  
   // "setup()"
   if(loop_cnt == -1){
     String d_str = "";
@@ -311,8 +314,10 @@ void pulse_mode_subroutine(){
   
   
   
+  uint8_t i = random(0,lines);
+  
   // order a pulse
-  pulse_mV_combo(raw_amp_mV);
+  pulse_mV_combo(raw_amp_mV/float(lines)*(i+1));
   
   // must be before button things
   loop_cnt = (loop_cnt+1)%scan_interval;
