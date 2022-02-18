@@ -220,7 +220,7 @@ void pulse_mode_subroutine(){
     } else {
       d_str = "0-5mV";
     }
-    draw_footer(ch_mode,dummy,dummy,d_str);
+    draw_footer(ch_mode,"lines -1","lines +1",d_str);
     prepare_plot_area();
   }
   
@@ -289,6 +289,7 @@ void pulse_mode_subroutine(){
       if (update_count_down == update_count_down_redraw_val) {
         display_status(0xFF); // clear plot area, redraw graph, update text
         meta_loop_cnt = 0; // delay unconditional redraw
+        plot_pulse_all_lines();
       } else if (update_count_down == 1) {
         // don't waste pulses - slower scanning for new input
         scan_interval = scan_interval_slow;
@@ -331,12 +332,24 @@ void pulse_mode_subroutine(){
       
       change_mode(mode+1);
     }
-//     if(buttons_pressed & BUTTON_B){
-//       toggle_TX_LED();  
-//     }
-//     if(buttons_pressed & BUTTON_C){
-//       toggle_RX_LED();  
-//     }
+    if(buttons_pressed & BUTTON_B){
+      //toggle_TX_LED();  
+      if(lines > 1){
+        lines -= 1;
+      }
+      display_status(1);
+      update_count_down = update_count_down_reset_val;
+      scan_interval = scan_interval_fast;
+    }
+    if(buttons_pressed & BUTTON_C){
+      //toggle_RX_LED();  
+      if(lines < 32){
+        lines += 1;
+      }
+      display_status(1);
+      update_count_down = update_count_down_reset_val;
+      scan_interval = scan_interval_fast;
+    }
     if(buttons_pressed & BUTTON_D){
       toggle_USER_LED();  
       amp_range = (amp_range +1)%AMP_RANGES;

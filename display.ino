@@ -315,6 +315,11 @@ void tft_debug_print(int debug_pos_x,
 }
 
 
+void plot_pulse_all_lines(){
+  for (uint8_t i = lines-1; i>0;i--){
+    plot_pulse(Q_pC*i/lines, tau_rise_ns, tau_tail_ns, PULSE_DELAY,GLCD_CL_MAROON);
+  }
+}
 
 void display_status(uint8_t update_level){
     
@@ -392,7 +397,7 @@ void display_status(uint8_t update_level){
       prepare_plot_area();
     }
     if (update_level & 4){
-      plot_pulse(Q_pC, tau_rise_ns, tau_tail_ns, PULSE_DELAY,ILI9341_RED);
+      plot_pulse(Q_pC, tau_rise_ns, tau_tail_ns, PULSE_DELAY,GLCD_CL_RED);
     }
     
     
