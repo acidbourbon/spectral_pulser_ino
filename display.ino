@@ -49,25 +49,31 @@ void draw_lemo(int x, int y){
 }
 
 void draw_lemos_and_jumper_field(){
-    draw_lemo(30,30);
-    draw_lemo(320/2-30/2,30);
-    tft_debug_print(320/2-30/2,8,"in",GLCD_CL_WHITE,2); 
-    tft_debug_print(320/2-30/2+5,30+30+3,"50R"); 
-    draw_lemo(320-30-30,30);
-    tft_debug_print(320-30-30,8,"out",GLCD_CL_WHITE,2); 
-    tft_debug_print(320-30-30+5,30+30+3,"50R"); 
+    const int xofs = 0;
+    const int yofs = 40;
+  
+    draw_lemo(xofs + 30,yofs + 30);
+    draw_lemo(xofs + 320/2-30/2,yofs + 30);
+    tft_debug_print(xofs + 320/2-30/2,yofs + 8,"in",GLCD_CL_WHITE,2); 
+    tft_debug_print(xofs + 320/2-30/2+5,yofs + 30+30+3,"50R"); 
+    draw_lemo(xofs + 320-30-30,yofs + 30);
+    tft_debug_print(xofs + 320-30-30,yofs + 8,"out",GLCD_CL_WHITE,2); 
+    tft_debug_print(xofs + 320-30-30+5,yofs + 30+30+3,"50R"); 
     
+    
+    const int xofs2 = xofs+5; 
+    const int yofs2 = yofs-3; 
    
     // the jumper field surrounding box
-    tft.drawRect  (320/2+32,25,46,46,GLCD_CL_LIGHT_GRAY);
+    tft.drawRect  (xofs2 + 320/2+32,yofs2 + 25,46,46,GLCD_CL_LIGHT_GRAY);
     // the jumper
-    tft.fillRect  (320/2+32+6+1*14-3,25+6-3,12,26,GLCD_CL_BLUE);
-    tft.fillRect  (320/2+32+6+1*14,25+6,6,20,GLCD_CL_BROWN);
+    tft.fillRect  (xofs2 + 320/2+32+6+1*14-3,yofs2 + 25+6-3,12,26,GLCD_CL_BLUE);
+    tft.fillRect  (xofs2 + 320/2+32+6+1*14,yofs2 + 25+6,6,20,GLCD_CL_BROWN);
    
     // the jumper matrix
     for(uint8_t i = 0; i<3;i++)
       for(uint8_t j = 0; j<3;j++)
-        tft.fillRect  (320/2+32+6+i*14,25+6+j*14,6,6,GLCD_CL_ORANGE);
+        tft.fillRect  (xofs2 + 320/2+32+6+i*14,yofs2 + 25+6+j*14,6,6,GLCD_CL_ORANGE);
   
 }
 

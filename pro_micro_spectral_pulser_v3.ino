@@ -131,7 +131,7 @@ void attenuator_mode_subroutine(){
   
   // "setup()"
   if(loop_cnt == -1  ){
-    tft_debug_print(col1_x,l1_y,"attenuator mode",GLCD_CL_RED,2); 
+    tft_debug_print(col1_x,10,"attenuator mode",GLCD_CL_RED,2); 
     tft_debug_print(col1_x,l2_y,"attenuation (dB): ",GLCD_CL_WHITE,2); 
     tft_debug_print(col1_x,l3_y,"U_out/U_in      : ",GLCD_CL_WHITE,2); 
     tft_debug_print(col1_x,l4_y,"U_in/U_out      : ",GLCD_CL_WHITE,2); 
