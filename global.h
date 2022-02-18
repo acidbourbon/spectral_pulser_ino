@@ -1,6 +1,8 @@
 #include "SPI.h"
-#include "Adafruit_GFX.h"
+//#include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
+
+#include <avr/pgmspace.h>
 
 inline void clear_screen() __attribute__((always_inline));
 
@@ -24,6 +26,7 @@ inline float calc_Q_pC(float raw_amplitude_mV, float tau2_ns) __attribute__((alw
 
 inline float pulse_func(const float x, const float q, const float tau_rise, const float tau_tail, const float tdelay)  __attribute__((always_inline));
 
+inline void draw_lemos_and_jumper_field() __attribute__((always_inline)); 
 
 
 #define GLCD_CL_BLACK 0x0000

@@ -13,7 +13,6 @@ const int PLOT_HEIGHT = 120;
 const int PLOT_WIDTH = 260;
 
 const int PLOT_BACKGND_COL = ILI9341_BLACK;
-// const int PLOT_GRID_COL    = GLCD_CL_DARK_CYAN;
 const int PLOT_GRID_COL    = DARK_GREY_BLUE;
 
 
@@ -49,7 +48,28 @@ void draw_lemo(int x, int y){
     tft.drawCircle(x+14,y+14,2,GLCD_CL_LIGHT_GRAY);
 }
 
-
+void draw_lemos_and_jumper_field(){
+    draw_lemo(30,30);
+    draw_lemo(320/2-30/2,30);
+    tft_debug_print(320/2-30/2,8,2,"in"); 
+    tft_debug_print(320/2-30/2+5,30+30+3,1,"50R"); 
+    draw_lemo(320-30-30,30);
+    tft_debug_print(320-30-30,8,2,"out"); 
+    tft_debug_print(320-30-30+5,30+30+3,1,"50R"); 
+    
+   
+    // the jumper field surrounding box
+    tft.drawRect  (320/2+32,25,46,46,GLCD_CL_LIGHT_GRAY);
+    // the jumper
+    tft.fillRect  (320/2+32+6+1*14-3,25+6-3,12,26,GLCD_CL_BLUE);
+    tft.fillRect  (320/2+32+6+1*14,25+6,6,20,GLCD_CL_BROWN);
+   
+    // the jumper matrix
+    for(uint8_t i = 0; i<3;i++)
+      for(uint8_t j = 0; j<3;j++)
+        tft.fillRect  (320/2+32+6+i*14,25+6+j*14,6,6,GLCD_CL_ORANGE);
+  
+}
 
 void clear_screen() {
   tft.fillScreen(ILI9341_BLACK);
@@ -88,46 +108,25 @@ void draw_footer(
 }
 
 
-void add_pk_ampl_to_plot(){
-  
-  // please, I can't explain how i calculate the y pos, i just leave it at that
-  
-  const int yoffset = PLOT_POS_Y+PLOT_HEIGHT;
-  const int xoffset = PLOT_POS_X;
-  const int width   = PLOT_WIDTH;
- 
-  //float q = abs(tau_rise_ns-tau_tail_ns);
-  float y_pos = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
-  
-  tft.setCursor(
-    xoffset + int((PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))/XSCALE) -5, // divide by XSCALE to go to pixels
-    yoffset - 10 - int(y_pos/YSCALE) // -10 because of text height
-  );
-  tft.setTextColor(ILI9341_RED);
-  tft.setTextSize(1);
-  tft.print(String(real_amp_mV,1)+" mV");
-}
-
-// void pulse_preview(int clear){
-//     //float tau_rise = 0.03;
-//     //float tau_tail = 20;
-//     //const int normalize = 0;
-//     
-//     //float q = abs(tau_rise_ns-tau_tail_ns)*100;// if tau rise super small, then abs ampl is 70
-//     //float tdelay = 20;
-//     
-//     //if(normalize){
-//     //  float max_amp = max_amplitude(q,tau_rise_ns,tau_tail_ns);
-//     //  // scale to 100 %
-//     //  q = q*100./max_amp;
-//     //}
-//     
-//     if (clear){
-//       prepare_plot_area();
-//     }
-//     
-//     plot_pulse(Q_pC, tau_rise_ns, tau_tail_ns, PULSE_DELAY,ILI9341_RED);
+// void add_pk_ampl_to_plot(){
+//   
+//   
+//   const int yoffset = PLOT_POS_Y+PLOT_HEIGHT;
+//   const int xoffset = PLOT_POS_X;
+//   const int width   = PLOT_WIDTH;
+//  
+//   //float q = abs(tau_rise_ns-tau_tail_ns);
+//   float y_pos = max_amplitude(Q_pC,tau_rise_ns,tau_tail_ns);
+//   
+//   tft.setCursor(
+//     xoffset + int((PULSE_DELAY+peaking_time(tau_rise_ns,tau_tail_ns))/XSCALE) -5, // divide by XSCALE to go to pixels
+//     yoffset - 10 - int(y_pos/YSCALE) // -10 because of text height
+//   );
+//   tft.setTextColor(ILI9341_RED);
+//   tft.setTextSize(1);
+//   tft.print(String(real_amp_mV,1)+" mV");
 // }
+
     
     
 void prepare_plot_area(){
@@ -142,28 +141,28 @@ void prepare_plot_area(){
 }
 
 
-void demo_plot(void) {
-
-    tft.fillScreen(ILI9341_BLACK);
-  
-  
-    float tau_rise = 0.03;
-    float tau_tail = 20;
-    float q = abs(tau_rise-tau_tail)*100;// if tau rise super small, then abs ampl is 70
-    //float tdelay = 20;
-    
-    clear_plot_area();
-    plot_grid(XTICS_PX,YTICS_PX);
-    plot_axis_numbers(XTICS_PX,YTICS_PX);
-    
-    plot_pulse(q, tau_rise, tau_tail, PULSE_DELAY,ILI9341_RED);
-    plot_pulse(q, 2.5, tau_tail, PULSE_DELAY,ILI9341_YELLOW);
-    plot_pulse(q, 5, tau_tail, PULSE_DELAY,ILI9341_GREEN);
-    plot_pulse(q, 10, tau_tail, PULSE_DELAY,ILI9341_BLUE);
-    
-    //delay(2000);
-
-}
+// void demo_plot(void) {
+// 
+//     tft.fillScreen(ILI9341_BLACK);
+//   
+//   
+//     float tau_rise = 0.03;
+//     float tau_tail = 20;
+//     float q = abs(tau_rise-tau_tail)*100;// if tau rise super small, then abs ampl is 70
+//     //float tdelay = 20;
+//     
+//     clear_plot_area();
+//     plot_grid(XTICS_PX,YTICS_PX);
+//     plot_axis_numbers(XTICS_PX,YTICS_PX);
+//     
+//     plot_pulse(q, tau_rise, tau_tail, PULSE_DELAY,ILI9341_RED);
+//     plot_pulse(q, 2.5, tau_tail, PULSE_DELAY,ILI9341_YELLOW);
+//     plot_pulse(q, 5, tau_tail, PULSE_DELAY,ILI9341_GREEN);
+//     plot_pulse(q, 10, tau_tail, PULSE_DELAY,ILI9341_BLUE);
+//     
+//     //delay(2000);
+// 
+// }
 
 float peaking_time(float tau1, float tau2){
   return log(tau1/tau2) / (1./tau2 - 1./tau1);
@@ -182,8 +181,7 @@ float calc_Q_pC(float raw_amplitude_mV, float tau2_ns){
 
 float pulse_func(const float x, const float q, const float tau_rise, const float tau_tail, const float tdelay){
   float x_ = x-tdelay;
-  const float impedance = 50;
-  return (x_>0) * impedance * q/(tau_rise - tau_tail)*(exp(-x_/tau_rise) - exp(-x_/tau_tail));
+  return (x_>0) * 50 * q/(tau_rise - tau_tail)*(exp(-x_/tau_rise) - exp(-x_/tau_tail));
 }
 
 void clear_plot_area(){
@@ -214,17 +212,16 @@ void plot_axis_numbers(int xtics_px, int ytics_px){
   
   const int yoffset = PLOT_POS_Y+PLOT_HEIGHT;
   const int xoffset = PLOT_POS_X;
-  
+  tft.setTextSize(1);
+  tft.setTextColor(ILI9341_WHITE); 
   for ( int i = 0; i < PLOT_WIDTH; i += xtics_px){
     tft.setCursor(xoffset+i -3,yoffset + 5);
-    tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
     int x_number = int(float(i)*XSCALE - PULSE_DELAY);
     if (x_number >= 0)
       tft.println(x_number);
   }
   for ( int j = 0; j < PLOT_HEIGHT; j += ytics_px){
     tft.setCursor(xoffset-15,yoffset-j -3);
-    tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
     int y_number = int(float(j)*YSCALE);
     if (y_number >= 0)
       tft.println(y_number);
@@ -270,32 +267,32 @@ void plot_pulse(float q, float tau_rise, float tau_tail, float tdelay, int plotc
 }
 
 
-unsigned long testText() {
-  tft.fillScreen(ILI9341_BLACK);
-  unsigned long start = micros();
-  tft.setCursor(0, 0);
-  tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
-  tft.println("Hello World! Spectral");
-  tft.setTextColor(ILI9341_YELLOW); tft.setTextSize(2);
-  tft.println(1234.56);
-  tft.setTextColor(ILI9341_RED);    tft.setTextSize(3);
-  tft.println(0xDEADBEEF, HEX);
-  tft.println();
-  tft.setTextColor(ILI9341_GREEN);
-  tft.setTextSize(2);
-  tft.println("SpectralPulser1");
+// unsigned long testText() {
+//   tft.fillScreen(ILI9341_BLACK);
+//   unsigned long start = micros();
+//   tft.setCursor(0, 0);
+//   tft.setTextColor(ILI9341_WHITE);  tft.setTextSize(1);
+//   tft.println("Hello World! Spectral");
+//   tft.setTextColor(ILI9341_YELLOW); tft.setTextSize(2);
+//   tft.println(1234.56);
+//   tft.setTextColor(ILI9341_RED);    tft.setTextSize(3);
+//   tft.println(0xDEADBEEF, HEX);
+//   tft.println();
+//   tft.setTextColor(ILI9341_GREEN);
 //   tft.setTextSize(2);
-//   tft.println("I implore thee,");
-//   tft.setTextSize(1);
-//   tft.println("my foonting turlingdromes.");
-//   tft.println("And hooptiously drangle me");
-//   tft.println("with crinkly bindlewurdles,");
-//   tft.println("Or I will rend thee");
-//   tft.println("in the gobberwarts");
-//   tft.println("with my blurglecruncheon,");
-//   tft.println("see if I don't!");
-  return micros() - start;
-}
+//   tft.println("SpectralPulser1");
+// //   tft.setTextSize(2);
+// //   tft.println("I implore thee,");
+// //   tft.setTextSize(1);
+// //   tft.println("my foonting turlingdromes.");
+// //   tft.println("And hooptiously drangle me");
+// //   tft.println("with crinkly bindlewurdles,");
+// //   tft.println("Or I will rend thee");
+// //   tft.println("in the gobberwarts");
+// //   tft.println("with my blurglecruncheon,");
+// //   tft.println("see if I don't!");
+//   return micros() - start;
+// }
 
 
 void tft_debug_print(int debug_pos_x,

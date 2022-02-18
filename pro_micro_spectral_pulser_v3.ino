@@ -134,26 +134,7 @@ void attenuator_mode_subroutine(){
     tft_debug_print(col1_x,l3_y,2,"U_out/U_in      : "); 
     tft_debug_print(col1_x,l4_y,2,"U_in/U_out      : "); 
     
-    draw_lemo(30,30);
-    draw_lemo(320/2-30/2,30);
-    tft_debug_print(320/2-30/2,8,2,"in"); 
-    tft_debug_print(320/2-30/2+5,30+30+3,1,"50R"); 
-    draw_lemo(320-30-30,30);
-    tft_debug_print(320-30-30,8,2,"out"); 
-    tft_debug_print(320-30-30+5,30+30+3,1,"50R"); 
-    
-   
-    // the jumper field surrounding box
-    tft.drawRect  (320/2+32,25,46,46,GLCD_CL_LIGHT_GRAY);
-    // the jumper
-    tft.fillRect  (320/2+32+6+1*14-3,25+6-3,12,26,GLCD_CL_BLUE);
-    tft.fillRect  (320/2+32+6+1*14,25+6,6,20,GLCD_CL_BROWN);
-   
-    // the jumper matrix
-    for(uint8_t i = 0; i<3;i++)
-      for(uint8_t j = 0; j<3;j++)
-        tft.fillRect  (320/2+32+6+i*14,25+6+j*14,6,6,GLCD_CL_ORANGE);
-      
+    draw_lemos_and_jumper_field();
     draw_footer(ch_mode,dummy,dummy,dummy);
   }
   
@@ -181,15 +162,15 @@ void attenuator_mode_subroutine(){
       
       change_mode(mode+1);
     }
-    if(buttons_pressed & BUTTON_B){
-      toggle_TX_LED();  
-    }
-    if(buttons_pressed & BUTTON_C){
-      toggle_RX_LED();  
-    }
-    if(buttons_pressed & BUTTON_D){
-      toggle_USER_LED();  
-    }
+//     if(buttons_pressed & BUTTON_B){
+//       toggle_TX_LED();  
+//     }
+//     if(buttons_pressed & BUTTON_C){
+//       toggle_RX_LED();  
+//     }
+//     if(buttons_pressed & BUTTON_D){
+//       toggle_USER_LED();  
+//     }
   }
   
   
@@ -308,7 +289,7 @@ void pulse_mode_subroutine(){
       } else if (update_count_down == 1) {
         // don't waste pulses - slower scanning for new input
         scan_interval = scan_interval_slow;
-        add_pk_ampl_to_plot();
+        //add_pk_ampl_to_plot();
         set_USER_LED(0);
       }
       // count down until you reach zero
@@ -341,16 +322,16 @@ void pulse_mode_subroutine(){
   if((loop_cnt % 5) == 0){
     buttons_pressed = adc_buttons_pressed();  
     if(buttons_pressed & BUTTON_A){
-      toggle_USER_LED();  
+//       toggle_USER_LED();  
       
       change_mode(mode+1);
     }
-    if(buttons_pressed & BUTTON_B){
-      toggle_TX_LED();  
-    }
-    if(buttons_pressed & BUTTON_C){
-      toggle_RX_LED();  
-    }
+//     if(buttons_pressed & BUTTON_B){
+//       toggle_TX_LED();  
+//     }
+//     if(buttons_pressed & BUTTON_C){
+//       toggle_RX_LED();  
+//     }
     if(buttons_pressed & BUTTON_D){
       toggle_USER_LED();  
       amp_range = (amp_range +1)%AMP_RANGES;
