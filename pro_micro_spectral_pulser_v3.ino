@@ -119,18 +119,20 @@ void loop() {
 
 void attenuator_mode_subroutine(){
   
-  const int col1_x = 30;
+  const int col1_x = 15;
   const int col1_y = 100;
   
   const int l1_y = col1_y;
   const int l2_y = col1_y+30;
   const int l3_y = l2_y+30;
+  const int l4_y = l3_y+30;
   
   // "setup()"
   if(loop_cnt == -1  ){
     tft_debug_print(col1_x,l1_y,2,"attenuator mode",GLCD_CL_RED); 
     tft_debug_print(col1_x,l2_y,2,"attenuation (dB): "); 
     tft_debug_print(col1_x,l3_y,2,"U_out/U_in      : "); 
+    tft_debug_print(col1_x,l4_y,2,"U_in/U_out      : "); 
     
     draw_lemo(30,30);
     draw_lemo(320/2-30/2,30);
@@ -162,6 +164,7 @@ void attenuator_mode_subroutine(){
     attenuation_dB = set_attenuator_dB(attenuation_dB) +1.; // 1 dB is insertion loss
     tft_debug_print(col1_x+18*6*2,l2_y,2,String(attenuation_dB,1)+" "); 
     tft_debug_print(col1_x+18*6*2,l3_y,2,String(pow(10,-attenuation_dB/20.),3)+" "); 
+    tft_debug_print(col1_x+18*6*2,l4_y,2,String(pow(10,attenuation_dB/20.),2)+" "); 
   }
   
   delay(5);
